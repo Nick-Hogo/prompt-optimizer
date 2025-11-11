@@ -200,10 +200,163 @@ pnpm run version:publish
 - Use `pnpm install` and pnpm workspace commands only
 
 ### Docker Deployment
-- Multi-stage build optimizes image size
-- Supports environment variable injection for API keys
-- Built-in MCP server at `/mcp` endpoint
-- Includes access password protection
+
+Docker是推荐的生产环境部署方式,提供完整的Web应用和MCP服务器支持。
+
+#### 架构说明
+- **多阶段构建**: 使用Node.js构建,Nginx+Node运行时部署
+- **服务管理**: Supervisor管理Nginx和MCP服务器两个进程
+- **端口配置**: 
+  - Nginx监听 `${NGINX_PORT}` (默认80)
+  - MCP服务器监听内部3000端口
+  - MCP通过 `/mcp` 路径对外提供服务
+- **访问控制**: 支持Basic Auth密码保护Web界面
+- **配置注入**: 启动时动态生成 `config.js` 注入环境变量
+
+#### 快速部署命令
+
+```bash
+# 基础部署(无密码保护)
+docker run -d -p 8081:80 --restart unless-stopped \
+  --name prompt-optimizer \
+  linshen/prompt-optimizer
+
+# 完整配置(含API密钥和访问控制)
+docker run -d -p 8081:80 \
+  -e VITE_OPENAI_API_KEY=your_key \
+  -e VITE_GEMINI_API_KEY=your_key \
+  -e ACCESS_USERNAME=admin \
+  -e ACCESS_PASSWORD=your_password \
+  -e MCP_DEFAULT_MODEL_PROVIDER=openai \
+  --restart unless-stopped \
+  --name prompt-optimizer \
+  linshen/prompt-optimizer
+
+# 国内镜像(阿里云)
+docker run -d -p 8081:80 --restart unless-stopped \
+  --name prompt-optimizer \
+  registry.cn-guangzhou.aliyuncs.com/prompt-optimizer/prompt-optimizer
+```
+
+#### Docker Compose部署
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/linshenkx/prompt-optimizer.git
+cd prompt-optimizer
+
+# 2. 配置环境变量(可选)
+cp env.local.example .env
+# 编辑.env文件
+
+# 3. 启动服务
+docker compose up -d
+
+# 4. 查看日志
+docker compose logs -f
+
+# 5. 访问服务
+# Web界面: http://localhost:8081
+# MCP服务: http://localhost:8081/mcp
+```
+
+#### 环境变量配置
+
+**Web应用API密钥**:
+- `VITE_OPENAI_API_KEY` - OpenAI API密钥
+- `VITE_GEMINI_API_KEY` - Google Gemini API密钥
+- `VITE_DEEPSEEK_API_KEY` - DeepSeek API密钥
+- `VITE_SILICONFLOW_API_KEY` - SiliconFlow API密钥
+- `VITE_ZHIPU_API_KEY` - 智谱AI API密钥
+
+**多自定义模型配置**:
+```bash
+VITE_CUSTOM_API_KEY_<suffix>=your_key
+VITE_CUSTOM_API_BASE_URL_<suffix>=http://api.example.com/v1
+VITE_CUSTOM_API_MODEL_<suffix>=model-name
+# 例如: Ollama本地模型
+VITE_CUSTOM_API_KEY_ollama=dummy_key
+VITE_CUSTOM_API_BASE_URL_ollama=http://host.docker.internal:11434/v1
+VITE_CUSTOM_API_MODEL_ollama=qwen2.5:7b
+```
+
+**MCP服务器配置**:
+- `MCP_DEFAULT_MODEL_PROVIDER` - 默认模型提供商(openai/gemini/deepseek等)
+- `MCP_LOG_LEVEL` - 日志级别(debug/info/warn/error, 默认debug)
+- `MCP_DEFAULT_LANGUAGE` - 默认语言(zh/en, 默认zh)
+
+**访问控制**:
+- `ACCESS_USERNAME` - Web访问用户名(默认admin)
+- `ACCESS_PASSWORD` - Web访问密码(不设置则无密码保护)
+- 注意: MCP服务不受访问控制影响
+
+**Nginx配置**:
+- `NGINX_PORT` - Nginx监听端口(默认80)
+
+#### 本地构建Docker镜像
+
+```bash
+# 在项目根目录执行
+docker build -t my-prompt-optimizer .
+
+# 运行自构建镜像
+docker run -d -p 8081:80 \
+  -e VITE_OPENAI_API_KEY=your_key \
+  --name prompt-optimizer \
+  my-prompt-optimizer
+```
+
+#### 关键文件说明
+
+- `Dockerfile` - 多阶段构建配置
+- `docker-compose.yml` - Docker Compose编排配置
+- `docker/nginx.conf` - Nginx配置模板(支持环境变量替换)
+- `docker/start-services.sh` - 容器启动脚本
+- `docker/generate-config.sh` - 动态生成config.js的脚本
+- `docker/generate-auth.sh` - 生成Basic Auth配置的脚本
+- `docker/supervisord.conf` - Supervisor进程管理配置
+
+#### 健康检查
+
+Docker Compose配置了健康检查:
+```yaml
+healthcheck:
+  test: ["CMD", "sh", "-c", "curl -f http://localhost:80/ && curl -f http://localhost:80/mcp"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+```
+
+#### 故障排查
+
+```bash
+# 查看容器日志
+docker logs prompt-optimizer
+
+# 查看Nginx日志
+docker exec prompt-optimizer tail -f /var/log/nginx/error.log
+
+# 查看Supervisor日志
+docker exec prompt-optimizer tail -f /var/log/supervisor/supervisord.log
+
+# 检查MCP服务器状态
+docker exec prompt-optimizer supervisorctl status
+
+# 验证config.js生成
+docker exec prompt-optimizer cat /usr/share/nginx/html/config.js
+
+# 进入容器调试
+docker exec -it prompt-optimizer sh
+```
+
+#### 性能优化
+
+- **Gzip压缩**: 已启用,压缩级别6
+- **静态资源缓存**: /assets目录缓存7天
+- **SPA路由**: 通过try_files支持前端路由
+- **访问日志**: 已关闭以提升性能(仅记录错误日志)
+- **连接复用**: 启用HTTP/1.1 Keep-Alive
 
 ### Desktop Application
 - Auto-updater system with version checking

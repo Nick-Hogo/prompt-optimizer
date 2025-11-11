@@ -34,9 +34,71 @@ export function createDefaultTextModels(envVars: {
     }
   };
 
-  const gpt4oMiniModel: TextModel = {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4o Mini',
+  const grokProvider: TextProvider = {
+    id: 'openai',
+    name: 'OpenAI',
+    description: 'OpenAI GPT models and OpenAI-compatible APIs',
+    requiresApiKey: true,
+    defaultBaseURL: 'https://api.openai.com/v1',
+    supportsDynamicModels: true,
+    connectionSchema: {
+      required: ['apiKey'],
+      optional: ['baseURL', 'organization', 'timeout'],
+      fieldTypes: {
+        apiKey: 'string',
+        baseURL: 'string',
+        organization: 'string',
+        timeout: 'number'
+      }
+    }
+  };
+
+  const gpt5Model: TextModel = {
+    id: 'gpt5',
+    name: 'GPT-5',
+    description: 'Affordable and intelligent small model for fast, lightweight tasks',
+    providerId: 'openai',
+    capabilities: {
+            supportsTools: true,
+      supportsReasoning: false,
+      maxContextLength: 128000
+    },
+    parameterDefinitions: [
+      {
+        name: 'temperature',
+        labelKey: 'params.temperature.label',
+        descriptionKey: 'params.temperature.description',
+        description: 'Sampling temperature (0-2)',
+        type: 'number',
+        defaultValue: 1,
+        default: 1,
+        minValue: 0,
+        maxValue: 2,
+        min: 0,
+        max: 2,
+        step: 0.1
+      },
+      {
+        name: 'max_tokens',
+        labelKey: 'params.max_tokens.label',
+        descriptionKey: 'params.max_tokens.description',
+        description: 'Maximum tokens to generate',
+        type: 'integer',
+        minValue: 1,
+        min: 1,
+        unitKey: 'params.tokens.unit',
+        step: 1
+      }
+    ],
+    defaultParameterValues: {
+      temperature: 1,
+      top_p: 1
+    }
+  };
+
+  const grok3FastModel: TextModel = {
+    id: 'grok-3-fast',
+    name: 'Grok 3 Fast',
     description: 'Affordable and intelligent small model for fast, lightweight tasks',
     providerId: 'openai',
     capabilities: {
@@ -93,6 +155,95 @@ export function createDefaultTextModels(envVars: {
         baseURL: 'string',
         timeout: 'number'
       }
+    }
+  };
+
+  // ===== Anthropic Provider =====
+  const anthropicProvider: TextProvider = {
+    id: 'anthropic',
+    name: 'Anthropic',
+    description: 'Anthropic Claude models (Official SDK)',
+    requiresApiKey: true,
+    defaultBaseURL: 'https://api.anthropic.com',
+    supportsDynamicModels: false,
+    connectionSchema: {
+      required: ['apiKey'],
+      optional: ['baseURL', 'timeout'],
+      fieldTypes: {
+        apiKey: 'string',
+        baseURL: 'string',
+        timeout: 'number'
+      }
+    }
+  };
+
+  const claudeSonnet4Model: TextModel = {
+    id: 'claude-sonnet-4-20250514',
+    name: 'Claude 4.0 Sonnet',
+    description: 'Balanced Claude model for most tasks',
+    providerId: 'anthropic',
+    capabilities: {
+      supportsTools: true,
+      supportsReasoning: false,
+      maxContextLength: 200000
+    },
+    parameterDefinitions: [
+      {
+        name: 'temperature',
+        labelKey: 'params.temperature.label',
+        descriptionKey: 'params.temperature.description',
+        description: 'Sampling temperature (0-1)',
+        type: 'number',
+        defaultValue: 1,
+        default: 1,
+        minValue: 0,
+        maxValue: 1,
+        min: 0,
+        max: 1,
+        step: 0.1
+      },
+      {
+        name: 'max_tokens',
+        labelKey: 'params.max_tokens.label',
+        descriptionKey: 'params.max_tokens.description',
+        description: 'Maximum tokens to generate',
+        type: 'integer',
+        defaultValue: 8192,
+        default: 8192,
+        minValue: 1,
+        min: 1,
+        unitKey: 'params.tokens.unit',
+        step: 1
+      },
+      {
+        name: 'top_p',
+        labelKey: 'params.top_p.label',
+        descriptionKey: 'params.top_p.description',
+        description: 'Nucleus sampling parameter',
+        type: 'number',
+        defaultValue: 1,
+        default: 1,
+        minValue: 0,
+        maxValue: 1,
+        min: 0,
+        max: 1,
+        step: 0.01
+      },
+      {
+        name: 'top_k',
+        labelKey: 'params.top_k.label',
+        descriptionKey: 'params.top_k.description',
+        description: 'Top-k sampling parameter',
+        type: 'integer',
+        minValue: 1,
+        min: 1,
+        step: 1
+      }
+    ],
+    defaultParameterValues: {
+      temperature: 1,
+      top_p: 1,
+      max_tokens: 8192
     }
   };
 
@@ -153,9 +304,9 @@ export function createDefaultTextModels(envVars: {
     }
   };
 
-  const gemini2FlashModel: TextModel = {
-    id: 'gemini-2.0-flash',
-    name: 'Gemini 2.0 Flash',
+  const gemini25FlashModel: TextModel = {
+    id: 'gemini-2.5-pro',
+    name: 'Gemini 2.5 Pro',
     description: 'Latest Gemini 2.0 Flash model',
     providerId: 'gemini',
     capabilities: {
@@ -329,15 +480,28 @@ export function createDefaultTextModels(envVars: {
 
   // ===== 构建完整的 TextModelConfig =====
   return {
+    claude: {
+      id: 'claude',
+      name: 'Claude',
+      enabled: true,
+      providerMeta: anthropicProvider,
+      modelMeta: claudeSonnet4Model,
+      connectionConfig: {
+        apiKey: '',
+        baseURL: 'http://127.0.0.1:8080/v1'
+      },
+      paramOverrides: {},
+      customParamOverrides: {}
+    },
     openai: {
       id: 'openai',
-      name: 'OpenAI',
-      enabled: !!envVars.OPENAI_API_KEY,
+      name: 'Codex',
+      enabled: true,
       providerMeta: openaiProvider,
-      modelMeta: gpt4oMiniModel,
+      modelMeta: gpt5Model,
       connectionConfig: {
-        apiKey: envVars.OPENAI_API_KEY,
-        baseURL: 'https://api.openai.com/v1'
+        apiKey: '',
+        baseURL: 'http://127.0.0.1:8080/v1'
       },
       paramOverrides: {},
       customParamOverrides: {}
@@ -345,64 +509,64 @@ export function createDefaultTextModels(envVars: {
     gemini: {
       id: 'gemini',
       name: 'Gemini',
-      enabled: !!envVars.GEMINI_API_KEY,
+      enabled: true,
       providerMeta: geminiProvider,
-      modelMeta: gemini2FlashModel,
+      modelMeta: gemini25FlashModel,
       connectionConfig: {
-        apiKey: envVars.GEMINI_API_KEY,
-        baseURL: 'https://generativelanguage.googleapis.com'
+        apiKey: '',
+        baseURL: 'http://127.0.0.1:8080'
       },
       paramOverrides: {},
       customParamOverrides: {}
     },
-    deepseek: {
-      id: 'deepseek',
-      name: 'DeepSeek',
-      enabled: !!envVars.DEEPSEEK_API_KEY,
-      providerMeta: deepseekProvider,
-      modelMeta: deepseekChatModel,
-      connectionConfig: {
-        apiKey: envVars.DEEPSEEK_API_KEY,
-        baseURL: 'https://api.deepseek.com/v1'
-      },
-      paramOverrides: {},
-      customParamOverrides: {}
-    },
-    siliconflow: {
-      id: 'siliconflow',
-      name: 'SiliconFlow',
-      enabled: !!envVars.SILICONFLOW_API_KEY,
-      providerMeta: siliconflowProvider,
-      modelMeta: siliconflowModel,
-      connectionConfig: {
-        apiKey: envVars.SILICONFLOW_API_KEY,
-        baseURL: 'https://api.siliconflow.cn/v1'
-      },
-      paramOverrides: {},
-      customParamOverrides: {}
-    },
-    zhipu: {
-      id: 'zhipu',
-      name: 'Zhipu',
-      enabled: !!envVars.ZHIPU_API_KEY,
-      providerMeta: zhipuProvider,
-      modelMeta: zhipuModel,
-      connectionConfig: {
-        apiKey: envVars.ZHIPU_API_KEY,
-        baseURL: 'https://open.bigmodel.cn/api/paas/v4'
-      },
-      paramOverrides: {},
-      customParamOverrides: {}
-    },
-    custom: {
-      id: 'custom',
-      name: 'Custom',
-      enabled: !!envVars.CUSTOM_API_KEY,
+    // deepseek: {
+    //   id: 'deepseek',
+    //   name: 'DeepSeek',
+    //   enabled: !!envVars.DEEPSEEK_API_KEY,
+    //   providerMeta: deepseekProvider,
+    //   modelMeta: deepseekChatModel,
+    //   connectionConfig: {
+    //     apiKey: envVars.DEEPSEEK_API_KEY,
+    //     baseURL: 'https://api.deepseek.com/v1'
+    //   },
+    //   paramOverrides: {},
+    //   customParamOverrides: {}
+    // },
+    // siliconflow: {
+    //   id: 'siliconflow',
+    //   name: 'SiliconFlow',
+    //   enabled: !!envVars.SILICONFLOW_API_KEY,
+    //   providerMeta: siliconflowProvider,
+    //   modelMeta: siliconflowModel,
+    //   connectionConfig: {
+    //     apiKey: envVars.SILICONFLOW_API_KEY,
+    //     baseURL: 'https://api.siliconflow.cn/v1'
+    //   },
+    //   paramOverrides: {},
+    //   customParamOverrides: {}
+    // },
+    // zhipu: {
+    //   id: 'zhipu',
+    //   name: 'Zhipu',
+    //   enabled: !!envVars.ZHIPU_API_KEY,
+    //   providerMeta: zhipuProvider,
+    //   modelMeta: zhipuModel,
+    //   connectionConfig: {
+    //     apiKey: envVars.ZHIPU_API_KEY,
+    //     baseURL: 'https://open.bigmodel.cn/api/paas/v4'
+    //   },
+    //   paramOverrides: {},
+    //   customParamOverrides: {}
+    // },
+    grok: {
+      id: 'grok',
+      name: 'Grok',
+      enabled: true,
       providerMeta: openaiProvider, // 使用 OpenAI Provider（兼容 API）
-      modelMeta: customModel,
+      modelMeta: grok3FastModel,
       connectionConfig: {
-        apiKey: envVars.CUSTOM_API_KEY,
-        baseURL: envVars.CUSTOM_API_BASE_URL || 'http://localhost:11434/v1'
+        apiKey: '',
+        baseURL: 'http://127.0.0.1:8080/grok/v1'
       },
       paramOverrides: {},
       customParamOverrides: {}

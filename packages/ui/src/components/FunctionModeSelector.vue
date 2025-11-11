@@ -15,12 +15,14 @@
     <NRadioButton
       value="pro"
       :title="t('nav.contextMode')"
+      disabled
     >
       {{ t('nav.contextMode') }}
     </NRadioButton>
     <NRadioButton
       value="image"
       :title="t('nav.imageMode')"
+      disabled
     >
       {{ t('nav.imageMode') }}
     </NRadioButton>

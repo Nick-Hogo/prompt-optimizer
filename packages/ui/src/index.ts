@@ -99,6 +99,8 @@ export { default as ContextModeActions } from "./components/context-mode/Context
 export { default as PromptPreviewPanel } from "./components/PromptPreviewPanel.vue";
 export { default as ContextSystemWorkspace } from "./components/context-mode/ContextSystemWorkspace.vue";
 export { default as ContextUserWorkspace } from "./components/context-mode/ContextUserWorkspace.vue";
+export { default as QuickModelConfig } from "./components/QuickModelConfig.vue";
+export { default as ApiKeySetupModal } from "./components/ApiKeySetupModal.vue";
 
 // 导出 Naive UI 组件 (解决组件解析问题)
 export {

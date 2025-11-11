@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { darkTheme, lightTheme, type GlobalThemeOverrides, type GlobalTheme } from 'naive-ui'
 
 // 当前主题ID
-export const currentThemeId = ref<string>('light')
+export const currentThemeId = ref<string>('blue')
 
 // 主题类型定义
 export interface ThemeConfig {

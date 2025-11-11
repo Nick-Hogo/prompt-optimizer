@@ -3,7 +3,7 @@
     <NSpace vertical :size="16">
         <!-- 标题区域 -->
         <NFlex justify="space-between" align="center" :wrap="false">
-            <NFlex align="center" :size="8">
+            <NFlex align="center" :size="12">
                 <NText :depth="1" style="font-size: 18px; font-weight: 500">{{
                     label
                 }}</NText>
@@ -44,7 +44,33 @@
                         {{ helpText }}
                     </div>
                 </NPopover>
+
+                <!-- 模型和模板选择器 (放在标题右侧) -->
+                <div class="inline-selectors" v-if="modelLabel || templateLabel">
+                    <NSpace :size="12" align="center">
+                        <!-- 模型选择 -->
+                        <div v-if="modelLabel" class="inline-select-item">
+                            <NText :depth="3" style="font-size: 13px; margin-right: 8px;">
+                                {{ modelLabel }}:
+                            </NText>
+                            <div style="min-width: 180px;">
+                                <slot name="model-select"></slot>
+                            </div>
+                        </div>
+
+                        <!-- 提示词模板选择 -->
+                        <div v-if="templateLabel" class="inline-select-item">
+                            <NText :depth="3" style="font-size: 13px; margin-right: 8px;">
+                                {{ templateLabel }}:
+                            </NText>
+                            <div style="min-width: 200px;">
+                                <slot name="template-select"></slot>
+                            </div>
+                        </div>
+                    </NSpace>
+                </div>
             </NFlex>
+
             <NFlex align="center" :size="12">
                 <!-- 预览按钮 -->
                 <NButton
@@ -139,59 +165,23 @@
             show-count
         />
 
-        <!-- 控制面板 -->
-        <NGrid :cols="24" :x-gap="12" responsive="screen">
-            <!-- 模型选择 -->
-            <NGridItem :span="6" :xs="24" :sm="6">
-                <NSpace vertical :size="8">
-                    <NText
-                        :depth="2"
-                        style="font-size: 14px; font-weight: 500"
-                        >{{ modelLabel }}</NText
-                    >
-                    <slot name="model-select"></slot>
-                </NSpace>
-            </NGridItem>
-
-            <!-- 提示词模板选择 -->
-            <NGridItem v-if="templateLabel" :span="11" :xs="24" :sm="11">
-                <NSpace vertical :size="8">
-                    <NText
-                        :depth="2"
-                        style="font-size: 14px; font-weight: 500"
-                        >{{ templateLabel }}</NText
-                    >
-                    <slot name="template-select"></slot>
-                </NSpace>
-            </NGridItem>
-
+        <!-- 控制面板 - 只保留提交按钮 -->
+        <NFlex justify="end" align="center" :size="12">
             <!-- 控制按钮组 -->
-            <NGridItem
-                :span="templateLabel ? 2 : 13"
-                :xs="24"
-                :sm="templateLabel ? 2 : 13"
-            >
-                <NSpace vertical :size="8" align="end">
-                    <slot name="control-buttons"></slot>
-                </NSpace>
-            </NGridItem>
+            <slot name="control-buttons"></slot>
 
             <!-- 提交按钮 -->
-            <NGridItem :span="5" :xs="24" :sm="5">
-                <NSpace vertical :size="8" align="end">
-                    <NButton
-                        type="primary"
-                        size="medium"
-                        @click="$emit('submit')"
-                        :loading="loading"
-                        :disabled="loading || disabled || !modelValue.trim()"
-                        block
-                    >
-                        {{ loading ? loadingText : buttonText }}
-                    </NButton>
-                </NSpace>
-            </NGridItem>
-        </NGrid>
+            <NButton
+                type="primary"
+                size="medium"
+                @click="$emit('submit')"
+                :loading="loading"
+                :disabled="loading || disabled || !modelValue.trim()"
+                style="min-width: 120px;"
+            >
+                {{ loading ? loadingText : buttonText }}
+            </NButton>
+        </NFlex>
     </NSpace>
 
     <!-- 全屏弹窗 -->
@@ -331,3 +321,24 @@ const handleAddMissingVariable = (varName: string) => {
     emit("add-missing-variable", varName);
 };
 </script>
+
+<style scoped>
+.inline-selectors {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid var(--n-border-color);
+}
+
+.inline-select-item {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1200px) {
+  .inline-selectors {
+    display: none;
+  }
+}
+</style>

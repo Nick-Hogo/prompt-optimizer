@@ -1,10 +1,12 @@
 services:
   prompt-optimizer:
-    image: linshen/prompt-optimizer:latest
-#     Alternatively, you can build from source:
-#     build:
-#        context: .
-#        dockerfile: Dockerfile
+    # 使用预构建镜像（从 Docker Hub 拉取，不支持本地代码修改）
+    # image: linshen/prompt-optimizer:latest
+    
+    # 从源码构建（支持本地代码修改）
+    build:
+       context: .
+       dockerfile: Dockerfile
     container_name: prompt-optimizer
     restart: unless-stopped
     ports:
@@ -38,6 +40,6 @@ services:
 
       # Basic认证配置（可选）
       - ACCESS_USERNAME=${ACCESS_USERNAME:-admin}
-      - ACCESS_PASSWORD=${ACCESS_PASSWORD:-123456}
+      - ACCESS_PASSWORD=
     security_opt:
       - no-new-privileges:true

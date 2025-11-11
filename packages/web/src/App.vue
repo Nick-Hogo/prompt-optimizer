@@ -620,6 +620,12 @@
                                     </InputPanelUI>
                                 </NCard>
 
+                                <!-- 快速模型配置组件 -->
+                                <QuickModelConfig 
+                                    :services="services"
+                                    @model-saved="refreshTextModels"
+                                />
+
                                 <!-- 组件 B: PromptPanelUI -->
                                 <NCard
                                     :style="{
@@ -932,6 +938,13 @@
                 :renderPhase="renderPhase"
             />
 
+            <!-- API Key 设置弹窗 -->
+            <ApiKeySetupModal
+                v-model:show="showApiKeySetup"
+                @submit="handleApiKeySetupSubmit"
+                @error="toast.error"
+            />
+
             <!-- 关键:使用NGlobalStyle同步全局样式到body,消除CSS依赖 -->
             <NGlobalStyle />
 
@@ -994,6 +1007,8 @@ import {
     OutputDisplay,
     ContextEditor,
     FavoriteManagerUI,
+    QuickModelConfig,
+    ApiKeySetupModal,
     SaveFavoriteDialog,
     ContextModeActions,
     PromptPreviewPanel,
@@ -1069,11 +1084,67 @@ watch(
             await initializeI18nWithStorage();
             console.log("[Web] i18n initialized");
 
+            // 检查是否有配置的 API Key
+            await checkApiKeySetup(newServices);
+
             // 移除：高级模式设置的独立加载（改为 useFunctionMode 管理）
         }
     },
     { immediate: true },
 );
+
+// 检查 API Key 配置
+const checkApiKeySetup = async (services: any) => {
+    try {
+        const models = await services.modelManager.getAllModels();
+        const hasValidApiKey = models.some((model: any) => 
+            model.enabled && model.connectionConfig?.apiKey
+        );
+        
+        if (!hasValidApiKey) {
+            // 延迟显示弹窗，确保 UI 已完全加载
+            await nextTick();
+            setTimeout(() => {
+                showApiKeySetup.value = true;
+            }, 500);
+        }
+    } catch (error) {
+        console.error('[Web] Failed to check API key setup:', error);
+    }
+};
+
+// 处理 API Key 设置提交
+const handleApiKeySetupSubmit = async (data: { apiKey: string }) => {
+    if (!services.value?.modelManager) return;
+    
+    try {
+        // 获取所有模型配置
+        const allModels = await services.value.modelManager.getAllModels();
+        
+        // 更新所有模型的 API Key
+        const modelKeysToUpdate = ['claude', 'openai', 'gemini', 'grok'];
+        
+        for (const key of modelKeysToUpdate) {
+            const existingModel = allModels.find((m: any) => m.id === key);
+            
+            if (existingModel) {
+                // 更新现有模型的 API Key
+                await services.value.modelManager.updateModel(key, {
+                    connectionConfig: {
+                        ...existingModel.connectionConfig,
+                        apiKey: data.apiKey
+                    }
+                });
+            }
+        }
+        
+        await refreshTextModels();
+        toast.success('API Key 已配置到所有模型');
+    } catch (error: any) {
+        console.error('配置 API Key 失败:', error);
+        toast.error(`配置失败: ${error.message || '未知错误'}`);
+    }
+};
 
 // 4. 向子组件提供服务
 provide("services", services);
@@ -1086,10 +1157,11 @@ const servicesForContextEditor = computed(() => services?.value || null);
 
 // 6. 创建所有必要的引用
 const promptService = shallowRef<IPromptService | null>(null);
-const selectedOptimizationMode = ref<OptimizationMode>("system");
+const selectedOptimizationMode = ref<OptimizationMode>("user");
 const showDataManager = ref(false);
 const showFavoriteManager = ref(false);
 const showSaveFavoriteDialog = ref(false);
+const showApiKeySetup = ref(false);
 const saveFavoriteData = ref<{
     content: string;
     originalContent?: string;
