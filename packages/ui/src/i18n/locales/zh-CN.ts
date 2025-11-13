@@ -62,7 +62,7 @@ export default {
     user: "用户",
     copySuccess: "复制成功",
     copyFailed: "复制失败",
-    appName: "提示词优化器",
+    appName: "GuDa Prompt",
     selectFile: "选择文件",
     exporting: "导出中...",
     importing: "导入中...",
@@ -109,7 +109,7 @@ export default {
   nav: {
     home: "首页",
     dashboard: "仪表盘",
-    promptOptimizer: "提示词优化器",
+    promptOptimizer: "GuDa Prompt",
     modelManager: "模型管理",
     history: "历史记录",
     templates: "功能提示词",
@@ -409,7 +409,7 @@ export default {
     },
   },
   promptOptimizer: {
-    title: "提示词优化器",
+    title: "GuDa Prompt",
     inputPlaceholder: "请输入需要优化的prompt...",
     optimize: "开始优化",
     history: "历史记录",

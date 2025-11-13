@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 自定义滚动条样式 */
+:root {
+  --po-radius-sm: 6px;
+  --po-radius-md: 12px;
+  --po-radius-lg: 16px;
+  --po-radius-xl: 20px;
+  
+  --po-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
+  --po-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --po-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.12);
+  --po-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+  
+  --po-spacing-xs: 8px;
+  --po-spacing-sm: 12px;
+  --po-spacing-md: 16px;
+  --po-spacing-lg: 20px;
+  --po-spacing-xl: 24px;
+  --po-spacing-2xl: 32px;
+  
+  --po-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --po-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --po-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -12,20 +35,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  transition: background var(--po-transition-fast);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(128, 128, 128, 0.5);
 }
 
-/* 隐藏水平滚动条 */
 ::-webkit-scrollbar-horizontal {
-  display: none;
+  height: 8px;
 }
 
-/* 自定义select样式 */
 .custom-select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;

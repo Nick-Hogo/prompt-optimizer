@@ -1,3 +1,38 @@
+/* 增强按钮交互效果 */
+.n-button {
+  transition: all var(--po-transition-base) !important;
+  border-radius: var(--po-radius-md) !important;
+}
+
+.n-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--po-shadow-md);
+}
+
+.n-button--primary-type:hover {
+  box-shadow: var(--po-shadow-lg);
+}
+
+/* 增强卡片样式 */
+.n-card {
+  border-radius: var(--po-radius-lg) !important;
+  transition: all var(--po-transition-base) !important;
+}
+
+.n-card:hover {
+  box-shadow: var(--po-shadow-lg) !important;
+}
+
+/* 增强输入框样式 */
+.n-input {
+  border-radius: var(--po-radius-md) !important;
+}
+
+/* 增强选择器样式 */
+.n-select {
+  border-radius: var(--po-radius-md) !important;
+}
+
 /* 自定义选择器样式 */
 .custom-select {
   -webkit-appearance: none !important;

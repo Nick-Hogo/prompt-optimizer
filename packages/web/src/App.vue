@@ -501,9 +501,13 @@
                             >
                                 <!-- 组件 A: InputPanelUI -->
                                 <NCard
+                                    :bordered="false"
                                     :style="{
                                         flexShrink: 0,
                                         minHeight: '200px',
+                                        borderRadius: 'var(--po-radius-lg)',
+                                        boxShadow: 'var(--po-shadow-md)',
+                                        transition: 'all var(--po-transition-base)',
                                     }"
                                 >
                                     <InputPanelUI
@@ -642,10 +646,14 @@
 
                                 <!-- 组件 B: PromptPanelUI -->
                                 <NCard
+                                    :bordered="false"
                                     :style="{
                                         flex: 1,
                                         minHeight: '200px',
                                         overflow: 'hidden',
+                                        borderRadius: 'var(--po-radius-lg)',
+                                        boxShadow: 'var(--po-shadow-md)',
+                                        transition: 'all var(--po-transition-base)',
                                     }"
                                     content-style="height: 100%; max-height: 100%; overflow: hidden;"
                                 >
@@ -690,10 +698,14 @@
 
                             <!-- 右侧：测试区域 -->
                             <NCard
+                                :bordered="false"
                                 :style="{
                                     flex: 1,
                                     overflow: 'auto',
                                     height: '100%',
+                                    borderRadius: 'var(--po-radius-lg)',
+                                    boxShadow: 'var(--po-shadow-md)',
+                                    transition: 'all var(--po-transition-base)',
                                 }"
                                 content-style="height: 100%; max-height: 100%; overflow: hidden;"
                             >

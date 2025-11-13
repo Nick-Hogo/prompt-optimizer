@@ -4,7 +4,7 @@
     :closable="false"
     :mask-closable="false"
     preset="card"
-    title="欢迎使用提示词优化器"
+    title="欢迎使用GuDa Prompt"
     style="width: 90%; max-width: 500px;"
   >
     <NSpace vertical :size="16">
