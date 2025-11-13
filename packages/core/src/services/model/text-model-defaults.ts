@@ -493,19 +493,19 @@ export function createDefaultTextModels(envVars: {
       paramOverrides: {},
       customParamOverrides: {}
     },
-    openai: {
-      id: 'openai',
-      name: 'Codex',
-      enabled: true,
-      providerMeta: openaiProvider,
-      modelMeta: gpt5Model,
-      connectionConfig: {
-        apiKey: '',
-        baseURL: 'http://127.0.0.1:8080/v1'
-      },
-      paramOverrides: {},
-      customParamOverrides: {}
-    },
+    // openai: {
+    //   id: 'openai',
+    //   name: 'Codex',
+    //   enabled: true,
+    //   providerMeta: openaiProvider,
+    //   modelMeta: gpt5Model,
+    //   connectionConfig: {
+    //     apiKey: '',
+    //     baseURL: 'http://127.0.0.1:8080/v1'
+    //   },
+    //   paramOverrides: {},
+    //   customParamOverrides: {}
+    // },
     gemini: {
       id: 'gemini',
       name: 'Gemini',

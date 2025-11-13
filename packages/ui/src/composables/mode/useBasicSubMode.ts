@@ -20,14 +20,14 @@ let singleton: {
 
 /**
  * 基础模式的子模式单例
- * - 默认值为 'system'（系统提示词优化）
+ * - 默认值为 'user'（用户提示词优化）
  * - 自动持久化
  * - 独立于上下文模式和图像模式
  */
 export function useBasicSubMode(services: Ref<AppServices | null>): UseBasicSubModeApi {
   if (!singleton) {
     singleton = {
-      mode: ref<BasicSubMode>('system'),
+      mode: ref<BasicSubMode>('user'),
       initialized: false,
       initializing: null
     }
@@ -46,24 +46,24 @@ export function useBasicSubMode(services: Ref<AppServices | null>): UseBasicSubM
       try {
         const saved = await getPreference<BasicSubMode>(
           UI_SETTINGS_KEYS.BASIC_SUB_MODE,
-          'system'
+          'user'
         )
         singleton!.mode.value = (saved === 'system' || saved === 'user')
           ? saved
-          : 'system'
+          : 'user'
 
         console.log(`[useBasicSubMode] 初始化完成，当前值: ${singleton!.mode.value}`)
 
         // 持久化默认值（如果未设置过）
         if (saved !== 'system' && saved !== 'user') {
-          await setPreference(UI_SETTINGS_KEYS.BASIC_SUB_MODE, 'system')
-          console.log('[useBasicSubMode] 首次初始化，已持久化默认值: system')
+          await setPreference(UI_SETTINGS_KEYS.BASIC_SUB_MODE, 'user')
+          console.log('[useBasicSubMode] 首次初始化，已持久化默认值: user')
         }
       } catch (e) {
-        console.error('[useBasicSubMode] 初始化失败，使用默认值 system:', e)
-        // 读取失败则保持默认 'system'，并尝试持久化
+        console.error('[useBasicSubMode] 初始化失败，使用默认值 user:', e)
+        // 读取失败则保持默认 'user'，并尝试持久化
         try {
-          await setPreference(UI_SETTINGS_KEYS.BASIC_SUB_MODE, 'system')
+          await setPreference(UI_SETTINGS_KEYS.BASIC_SUB_MODE, 'user')
         } catch {
           // 忽略设置失败错误
         }

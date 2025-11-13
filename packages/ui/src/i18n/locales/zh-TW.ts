@@ -962,6 +962,7 @@ export default {
     classic: "米杏",
     green: "綠色",
     purple: "紫色",
+    guda: "GuDa",
   },
   test: {
     title: "測試",

@@ -1,21 +1,15 @@
 <template>
-  <NCollapse class="quick-model-config" :default-expanded-names="[]">
-    <NCollapseItem name="config">
-      <template #header>
-        <div class="config-header">
-          <div class="header-left">
-            <NIcon size="18" color="#18a058" style="margin-right: 8px;">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </NIcon>
-            <NText strong style="font-size: 15px;">{{ t('modelManager.quickConfig') }}</NText>
-          </div>
-        </div>
-      </template>
-
-      <NForm
+  <NModal
+    v-model:show="showModal"
+    preset="card"
+    :title="t('modelManager.quickConfig')"
+    style="width: 720px; max-width: 90vw;"
+    :segmented="{
+      content: true
+    }"
+    @close="handleClose"
+  >
+    <NForm
       label-placement="left"
       label-width="100"
       size="medium"
@@ -180,8 +174,7 @@
         </NSpace>
       </div>
     </NForm>
-    </NCollapseItem>
-  </NCollapse>
+  </NModal>
 </template>
 
 <script setup lang="ts">
@@ -198,29 +191,41 @@ import {
   NSpace,
   NText,
   NCheckbox,
-  NCollapse,
-  NCollapseItem,
+  NModal,
   NTag,
   NIcon,
   NGrid,
   NGridItem,
-  NTooltip,
-  useMessage
+  NTooltip
 } from 'naive-ui'
+import { useToast } from '../composables/ui/useToast'
 
 interface Props {
   services: AppServices | null
+  show?: boolean
 }
 
 interface Emits {
   (e: 'model-saved'): void
+  (e: 'update:show', value: boolean): void
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  show: false
+})
 const emit = defineEmits<Emits>()
 
+const showModal = computed({
+  get: () => props.show,
+  set: (value) => emit('update:show', value)
+})
+
+const handleClose = () => {
+  emit('update:show', false)
+}
+
 const { t } = useI18n()
-const message = useMessage()
+const toast = useToast()
 
 const isLoadingModels = ref(false)
 const isTesting = ref(false)
@@ -309,7 +314,7 @@ const handleApiKeyBlur = () => {
 
 const detectModels = async () => {
   if (!form.value.apiKey || !form.value.baseURL) {
-    message.warning('请先配置API密钥和API地址')
+    toast.warning('请先配置API密钥和API地址')
     return
   }
 
@@ -332,12 +337,12 @@ const detectModels = async () => {
         }))
         
         if (modelOptions.value.length > 0) {
-          message.success(`成功获取 ${modelOptions.value.length} 个模型`)
+          toast.success(`成功获取 ${modelOptions.value.length} 个模型`)
           if (!form.value.modelId) {
             form.value.modelId = modelOptions.value[0].value
           }
         } else {
-          message.warning('未找到可用模型')
+          toast.warning('未找到可用模型')
         }
       } else {
         console.log('响应格式不符合预期，尝试直接使用数据:', data)
@@ -348,23 +353,23 @@ const detectModels = async () => {
           }))
           
           if (modelOptions.value.length > 0) {
-            message.success(`成功获取 ${modelOptions.value.length} 个模型`)
+            toast.success(`成功获取 ${modelOptions.value.length} 个模型`)
             if (!form.value.modelId) {
               form.value.modelId = modelOptions.value[0].value
             }
           }
         } else {
-          message.error('模型数据格式不正确')
+          toast.error('模型数据格式不正确')
         }
       }
     } else {
       const errorText = await response.text()
       console.error('API请求失败:', response.status, errorText)
-      message.error(`获取模型失败: ${response.status}`)
+      toast.error(`获取模型失败: ${response.status}`)
     }
   } catch (error) {
     console.error('Failed to detect models:', error)
-    message.error('获取模型失败，请检查网络连接和API配置')
+    toast.error('获取模型失败，请检查网络连接和API配置')
   } finally {
     isLoadingModels.value = false
   }
@@ -387,12 +392,12 @@ const handleTest = async () => {
     })
 
     if (response.ok) {
-      message.success(t('modelManager.testSuccess'))
+      toast.success(t('modelManager.testSuccess'))
     } else {
-      message.error(t('modelManager.testFailed'))
+      toast.error(t('modelManager.testFailed'))
     }
   } catch (error) {
-    message.error(t('modelManager.testFailed'))
+    toast.error(t('modelManager.testFailed'))
   } finally {
     isTesting.value = false
   }
@@ -404,12 +409,12 @@ const handleRefreshModels = async () => {
 
 const handleSave = async () => {
   if (!props.services?.modelManager) {
-    message.error('模型管理器未初始化')
+    toast.error('模型管理器未初始化')
     return
   }
 
   if (!form.value.modelKey) {
-    message.warning('请填写模型标识')
+    toast.warning('请填写模型标识')
     return
   }
 
@@ -453,10 +458,10 @@ const handleSave = async () => {
     
     if (existingModel) {
       await props.services.modelManager.updateModel(form.value.modelKey, modelConfig)
-      message.success('模型配置已更新')
+      toast.success('模型配置已更新')
     } else {
       await props.services.modelManager.addModel(form.value.modelKey, modelConfig)
-      message.success('模型配置已保存')
+      toast.success('模型配置已保存')
     }
     
     emit('model-saved')
@@ -474,9 +479,9 @@ const handleSave = async () => {
   } catch (error: any) {
     console.error('保存模型配置失败:', error)
     if (error.message?.includes('already exists')) {
-      message.error('该模型标识已存在，请使用其他标识')
+      toast.error('该模型标识已存在，请使用其他标识')
     } else {
-      message.error(`保存失败: ${error.message || '未知错误'}`)
+      toast.error(`保存失败: ${error.message || '未知错误'}`)
     }
   } finally {
     isSaving.value = false
@@ -485,54 +490,6 @@ const handleSave = async () => {
 </script>
 
 <style scoped>
-.quick-model-config {
-  margin: 16px 0;
-  border: 1px solid var(--n-border-color);
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.quick-model-config:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.quick-model-config :deep(.n-collapse-item__header) {
-  padding: 16px 20px;
-  background-color: var(--n-color);
-}
-
-.quick-model-config :deep(.n-collapse-item__content-wrapper) {
-  padding: 0 20px 16px 20px;
-}
-
-.config-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 0;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-}
-
-.advanced-toggle {
-  font-size: 13px;
-  opacity: 0.85;
-  transition: opacity 0.2s;
-}
-
-.advanced-toggle:hover {
-  opacity: 1;
-}
-
-.config-form {
-  margin-top: 8px;
-}
-
 .config-form :deep(.n-form-item) {
   margin-bottom: 0;
 }

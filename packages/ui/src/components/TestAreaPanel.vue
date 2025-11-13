@@ -13,18 +13,6 @@
                 :enable-fullscreen="enableFullscreen"
                 :style="{ marginBottom: '12px' }"
             />
-            
-            <!-- 测试内容专用模型选择器 -->
-            <NCard size="small" :bordered="true" :style="{ marginBottom: '16px' }">
-                <NFlex justify="space-between" align="center">
-                    <NText :depth="2" style="font-size: 14px; font-weight: 500;">
-                        {{ t('test.model') }}：
-                    </NText>
-                    <div style="flex: 1; max-width: 300px;">
-                        <slot name="model-select"></slot>
-                    </div>
-                </NFlex>
-            </NCard>
         </div>
 
         <!-- 变量值输入表单 (完整实现) -->
@@ -174,6 +162,7 @@
         <div :style="{ flexShrink: 0 }">
             <TestControlBar
                 :model-label="t('test.model')"
+                :show-model-override="showModelOverride"
                 :show-compare-toggle="enableCompareMode"
                 :is-compare-mode="props.isCompareMode"
                 :primary-action-text="primaryActionText"
@@ -187,6 +176,9 @@
             >
                 <template #model-select>
                     <slot name="model-select"></slot>
+                </template>
+                <template #model-override-select>
+                    <slot name="model-override-select"></slot>
                 </template>
                 <template #secondary-controls>
                     <slot name="secondary-controls"></slot>
@@ -342,6 +334,7 @@ interface Props {
     // 功能开关
     enableCompareMode?: boolean;
     enableFullscreen?: boolean;
+    showModelOverride?: boolean;
 
     // 布局配置
     inputMode?: "compact" | "normal";
@@ -368,6 +361,7 @@ const props = withDefaults(defineProps<Props>(), {
     isCompareMode: true,
     enableCompareMode: true,
     enableFullscreen: true,
+    showModelOverride: false,
     inputMode: "normal",
     controlBarLayout: "default",
     buttonSize: "medium",

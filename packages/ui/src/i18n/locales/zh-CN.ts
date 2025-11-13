@@ -417,10 +417,10 @@ export default {
     share: "分享",
     export: "导出",
     originalPrompt: "原始提示词",
-    optimizeModel: "优化模型",
-    modelOverride: "模型切换",
+    optimizeModel: "提供商",
+    modelOverride: "模型",
     modelOverridePlaceholder: "选择具体模型（可选）",
-    templateLabel: "优化提示词",
+    templateLabel: "优化模板",
     originalPromptPlaceholder: "请输入需要优化的原始提示词...",
 
     // 新增：优化模式相关
@@ -979,6 +979,7 @@ export default {
     classic: "米杏",
     green: "绿色",
     purple: "紫色",
+    guda: "GuDa",
   },
   test: {
     title: "测试",

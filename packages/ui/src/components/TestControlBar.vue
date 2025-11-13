@@ -2,14 +2,27 @@
   <NGrid :cols="24" :x-gap="12" responsive="screen">
     <!-- 模型选择区域 -->
     <NGridItem :span="modelSelectSpan" :xs="24" :sm="modelSelectSpan">
-      <NFlex align="center" :size="12">
-        <NText :depth="2" style="font-size: 14px; font-weight: 500; flex-shrink: 0;">
-          {{ modelLabel }}：
-        </NText>
-        <NFlex style="flex: 1;">
-          <slot name="model-select"></slot>
-        </NFlex>
-      </NFlex>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; overflow-x: auto;">
+        <!-- 提供商选择 -->
+        <div class="select-item">
+          <NText :depth="3" style="font-size: 14px; white-space: nowrap;">
+            {{ t('promptOptimizer.optimizeModel') }}:
+          </NText>
+          <div style="min-width: 140px; max-width: 200px;">
+            <slot name="model-select"></slot>
+          </div>
+        </div>
+        
+        <!-- 模型选择器 -->
+        <div v-if="showModelOverride" class="select-item">
+          <NText :depth="3" style="font-size: 14px; white-space: nowrap;">
+            {{ t('promptOptimizer.modelOverride') }}:
+          </NText>
+          <div style="min-width: 160px; max-width: 240px;">
+            <slot name="model-override-select"></slot>
+          </div>
+        </div>
+      </div>
     </NGridItem>
 
     <!-- 控制按钮区域 -->
@@ -65,6 +78,7 @@ const { t } = useI18n()
 interface Props {
   // 模型选择相关
   modelLabel: string
+  showModelOverride?: boolean
   
   // 对比模式控制
   showCompareToggle?: boolean
@@ -85,14 +99,15 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
+  showModelOverride: false,
   showCompareToggle: true,
   isCompareMode: false,
   primaryActionDisabled: false,
   primaryActionLoading: false,
   layout: 'default',
   buttonSize: 'medium',
-  modelSelectSpan: 8,
-  controlButtonsSpan: 16
+  modelSelectSpan: 14,
+  controlButtonsSpan: 10
 })
 
 const emit = defineEmits<{
@@ -115,3 +130,11 @@ const handlePrimaryAction = () => {
   emit('primary-action')
 }
 </script>
+
+<style scoped>
+.select-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+</style>

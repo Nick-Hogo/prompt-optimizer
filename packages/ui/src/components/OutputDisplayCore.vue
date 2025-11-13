@@ -1,17 +1,16 @@
 <template>
   <NCard
     :bordered="false"
-    class="output-display-core h-full  max-height: 100% "
-    content-style="padding: 0; height: 100%; max-height: 100%; display: flex; flex-direction: column; overflow: hidden;"
+    class="output-display-core"
+    content-style="padding: 12px; height: 100%; max-height: 100%; display: flex; flex-direction: column; overflow: hidden;"
   >
-    <NFlex vertical style="height: 100%; min-height: 0; overflow: hidden;">
+    <NFlex vertical :size="12" style="height: 100%; min-height: 0; overflow: hidden;">
       <!-- 统一顶层工具栏 -->
-      <NFlex v-if="hasToolbar" justify="space-between" align="center" style="flex: 0 0 auto;">
+      <NFlex v-if="hasToolbar" justify="space-between" align="center" style="flex-shrink: 0;">
         <!-- 左侧：视图控制按钮组 -->
         <NButtonGroup>
           <NButton 
             @click="internalViewMode = 'render'"
-            :disabled="internalViewMode === 'render'"
             size="small"
             :type="internalViewMode === 'render' ? 'primary' : 'default'"
           >
@@ -19,7 +18,6 @@
           </NButton>
           <NButton 
             @click="internalViewMode = 'source'"
-            :disabled="internalViewMode === 'source'"
             size="small"
             :type="internalViewMode === 'source' ? 'primary' : 'default'"
           >
@@ -28,7 +26,7 @@
           <NButton 
             v-if="isActionEnabled('diff') && originalContent"
             @click="internalViewMode = 'diff'"
-            :disabled="internalViewMode === 'diff' || !originalContent"
+            :disabled="!originalContent"
             size="small"
             :type="internalViewMode === 'diff' ? 'primary' : 'default'"
           >
@@ -85,8 +83,8 @@
       </NFlex>
 
       <!-- 推理内容区域 -->
-      <NFlex v-if="shouldShowReasoning" style="flex: 0 0 auto;">
-        <NCollapse v-model:expanded-names="reasoningExpandedNames" style="width: 100%;">
+      <div v-if="shouldShowReasoning" style="flex-shrink: 0;">
+        <NCollapse v-model:expanded-names="reasoningExpandedNames">
           <NCollapseItem name="reasoning">
             <template #header>
               <NFlex justify="space-between" align="center" style="width: 100%;">
@@ -100,7 +98,7 @@
               </NFlex>
             </template>
             
-            <NScrollbar class="reasoning-content" ref="reasoningContentRef" style="max-height: clamp(160px, 28vh, 360px); overflow: auto;">
+            <NScrollbar class="reasoning-content" ref="reasoningContentRef" style="max-height: clamp(160px, 28vh, 360px);">
               <MarkdownRenderer
                 v-if="displayReasoning"
                 :content="displayReasoning"
@@ -114,20 +112,20 @@
             </NScrollbar>
           </NCollapseItem>
         </NCollapse>
-      </NFlex>
+      </div>
+      
       <!-- 主要内容区域 -->
-      <NFlex vertical style="flex: 1; min-height: 0; max-height: 100%; overflow: hidden;">
+      <div style="flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column;">
         <!-- 对比模式 -->
         <TextDiffUI v-if="internalViewMode === 'diff' && content && originalContent"
           :originalText="originalContent"
           :optimizedText="content"
           :compareResult="compareResult"
-          class="w-full"
-          style="height: 100%; min-height: 0; overflow: auto;"
+          style="height: 100%; min-height: 0;"
         />
 
         <!-- 原文模式 -->
-        <template v-if="internalViewMode === 'source'">
+        <template v-else-if="internalViewMode === 'source'">
           <!-- 🆕 Pro 模式：使用变量感知输入框 -->
           <VariableAwareInput
             v-if="shouldEnableVariables && variableData"
@@ -139,6 +137,7 @@
             v-bind="variableData"
             @variable-extracted="handleVariableExtracted"
             @add-missing-variable="handleAddMissingVariable"
+            style="height: 100%; min-height: 0;"
           />
 
           <!-- Basic/Image 模式：使用普通输入框 -->
@@ -155,27 +154,19 @@
         </template>
 
         <!-- 渲染模式（默认） -->
-        <NFlex v-else
-          vertical
-          :align="displayContent ? 'stretch' : 'center'"
-          :justify="displayContent ? 'start' : 'center'"
-          style="flex: 1; min-height: 0; overflow: hidden;"
-        >
+        <div v-else style="height: 100%; min-height: 0; overflow: hidden; display: flex; flex-direction: column;">
           <MarkdownRenderer
             v-if="displayContent"
             :content="displayContent"
             :streaming="streaming"
             style="flex: 1; min-height: 0; overflow: auto;"
           />
-          <NEmpty
-            v-else-if="!loading && !streaming"
-            :description="placeholder || t('common.noContent')"
-            class="flex items-center justify-center"
-            style="height: 100%;"
-          />
-          <NText  v-else class="ml-2">{{ placeholder || t('common.loading') }}</NText>
-        </NFlex>
-      </NFlex>
+          <div v-else-if="!loading && !streaming" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <NEmpty :description="placeholder || t('common.noContent')" />
+          </div>
+          <NText v-else style="padding: 12px;">{{ placeholder || t('common.loading') }}</NText>
+        </div>
+      </div>
   
     </NFlex>
   </NCard>
@@ -619,20 +610,11 @@ onMounted(() => {
   // - 应该在应用级别统一初始化（如 App.vue）
   // - functionMode 有默认值 'basic'，可以正常工作
 
-  // 如果是可编辑模式，默认显示原文
-  if (props.mode === 'editable') {
-    internalViewMode.value = 'source';
-  }
+  // 所有模式都默认显示渲染模式
+  internalViewMode.value = 'render';
 });
 
-// 监听 mode 变化，自动切换视图模式
-watch(() => props.mode, (newMode) => {
-  if (newMode === 'editable' && internalViewMode.value === 'render') {
-    internalViewMode.value = 'source';
-  } else if (newMode === 'readonly' && internalViewMode.value === 'source') {
-    internalViewMode.value = 'render';
-  }
-});
+// 注意：不再监听mode变化自动切换视图，让用户自己选择
 
 defineExpose({ resetReasoningState, forceRefreshContent, forceExitEditing })
 </script>

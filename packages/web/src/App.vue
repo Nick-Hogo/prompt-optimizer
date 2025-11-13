@@ -539,6 +539,22 @@
                                         "
                                         @open-preview="handleOpenInputPreview"
                                     >
+                                        <template #quick-config-button>
+                                            <NButton
+                                                @click="showQuickModelConfig = true"
+                                                type="primary"
+                                                size="medium"
+                                                ghost
+                                            >
+                                                <template #icon>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                                        <circle cx="12" cy="12" r="3"/>
+                                                    </svg>
+                                                </template>
+                                                {{ $t('modelManager.quickConfig') }}
+                                            </NButton>
+                                        </template>
                                         <template #model-select>
                                             <SelectWithConfig
                                                 v-model="
@@ -638,12 +654,6 @@
                                     </InputPanelUI>
                                 </NCard>
 
-                                <!-- 快速模型配置组件 -->
-                                <QuickModelConfig 
-                                    :services="services"
-                                    @model-saved="refreshTextModels"
-                                />
-
                                 <!-- 组件 B: PromptPanelUI -->
                                 <NCard
                                     :bordered="false"
@@ -729,6 +739,7 @@
                                     v-model:is-compare-mode="isCompareMode"
                                     :enable-compare-mode="true"
                                     :enable-fullscreen="true"
+                                    :show-model-override="true"
                                     :input-mode="
                                         responsiveLayout.recommendedInputMode
                                             .value
@@ -781,6 +792,18 @@
                                             @config="
                                                 modelManager.showConfig = true
                                             "
+                                        />
+                                    </template>
+
+                                    <!-- 模型覆盖选择插槽 -->
+                                    <template #model-override-select>
+                                        <ModelOverrideSelector
+                                            v-model="modelOverrideValue"
+                                            :options="modelOverrideOptions"
+                                            :loading="isLoadingModelList"
+                                            :placeholder="t('promptOptimizer.modelOverridePlaceholder')"
+                                            size="medium"
+                                            @refresh="handleRefreshModelOverrideList"
                                         />
                                     </template>
 
@@ -969,6 +992,14 @@
                 v-model:show="showApiKeySetup"
                 @submit="handleApiKeySetupSubmit"
                 @error="toast.error"
+            />
+
+            <!-- 快速模型配置弹窗 -->
+            <QuickModelConfig
+                v-if="isReady"
+                v-model:show="showQuickModelConfig"
+                :services="services"
+                @model-saved="refreshTextModels"
             />
 
             <!-- 关键:使用NGlobalStyle同步全局样式到body,消除CSS依赖 -->
@@ -1189,6 +1220,7 @@ const showDataManager = ref(false);
 const showFavoriteManager = ref(false);
 const showSaveFavoriteDialog = ref(false);
 const showApiKeySetup = ref(false);
+const showQuickModelConfig = ref(false);
 const saveFavoriteData = ref<{
     content: string;
     originalContent?: string;

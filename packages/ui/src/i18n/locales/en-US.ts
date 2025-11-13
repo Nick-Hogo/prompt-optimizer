@@ -998,6 +998,7 @@ export default {
     classic: "Beige",
     green: "Green",
     purple: "Purple",
+    guda: "GuDa",
   },
   test: {
     title: "Test",

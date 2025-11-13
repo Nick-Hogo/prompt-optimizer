@@ -2,8 +2,8 @@
 <template>
     <NSpace vertical :size="20">
         <!-- 标题区域 -->
-        <NFlex justify="space-between" align="center" :wrap="false">
-            <NFlex align="center" :size="16" style="min-width: 0; flex: 1;">
+        <NFlex justify="space-between" align="flex-start" :wrap="true">
+            <NFlex align="center" :size="16" style="min-width: 0; flex: 1 1 auto;">
                 <NText :depth="1" style="font-size: 20px; font-weight: 600; white-space: nowrap; line-height: 1.5;">{{
                     label
                 }}</NText>
@@ -45,35 +45,15 @@
                     </div>
                 </NPopover>
 
-                <!-- 模型和模板选择器 (放在标题右侧) -->
-                <div class="inline-selectors" v-if="modelLabel || modelOverrideLabel || templateLabel">
-                    <NSpace :size="8" align="center" :wrap="false">
-                        <!-- 模型选择 -->
-                        <div v-if="modelLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
-                                {{ modelLabel }}:
-                            </NText>
-                            <div style="max-width: 150px; min-width: 120px; flex: 1;">
-                                <slot name="model-select"></slot>
-                            </div>
-                        </div>
-
-                        <!-- 模型覆盖选择器 (新增) -->
-                        <div v-if="modelOverrideLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
-                                {{ modelOverrideLabel }}:
-                            </NText>
-                            <div style="max-width: 160px; min-width: 120px; flex: 1;">
-                                <slot name="model-override-select"></slot>
-                            </div>
-                        </div>
-
+                <!-- 优化模板选择器 (保留在标题右侧) -->
+                <div class="inline-selectors" v-if="templateLabel">
+                    <NSpace :size="8" align="center" :wrap="true">
                         <!-- 提示词模板选择 -->
                         <div v-if="templateLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
+                            <NText :depth="3" class="select-label">
                                 {{ templateLabel }}:
                             </NText>
-                            <div style="max-width: 160px; min-width: 120px; flex: 1;">
+                            <div class="select-wrapper">
                                 <slot name="template-select"></slot>
                             </div>
                         </div>
@@ -81,7 +61,7 @@
                 </div>
             </NFlex>
 
-            <NFlex align="center" :size="16" style="flex-shrink: 0;">
+            <NFlex align="center" :size="8" :wrap="true" style="flex-shrink: 0;">
                 <!-- 预览按钮 -->
                 <NButton
                     v-if="showPreview"
@@ -176,21 +156,50 @@
         />
 
         <!-- 控制面板 - 只保留提交按钮 -->
-        <NFlex justify="end" align="center" :size="12">
-            <!-- 控制按钮组 -->
-            <slot name="control-buttons"></slot>
+        <NFlex justify="end" align="center" :size="12" :wrap="true">
+            <!-- 快速配置按钮 -->
+            <slot name="quick-config-button"></slot>
+            
+            <!-- 提供商、模型选择器和提交按钮 -->
+            <NFlex align="center" :size="12" :wrap="true">
+                <!-- 提供商和模型选择器 -->
+                <NSpace :size="12" align="center" v-if="modelLabel || modelOverrideLabel">
+                <!-- 提供商选择 -->
+                <div v-if="modelLabel" class="bottom-select-item">
+                    <NText :depth="3" class="select-label">
+                        {{ modelLabel }}:
+                    </NText>
+                    <div class="select-wrapper">
+                        <slot name="model-select"></slot>
+                    </div>
+                </div>
 
-            <!-- 提交按钮 -->
-            <NButton
-                type="primary"
-                size="medium"
-                @click="$emit('submit')"
-                :loading="loading"
-                :disabled="loading || disabled || !modelValue.trim()"
-                style="min-width: 120px;"
-            >
-                {{ loading ? loadingText : buttonText }}
-            </NButton>
+                <!-- 模型选择器 -->
+                <div v-if="modelOverrideLabel" class="bottom-select-item">
+                    <NText :depth="3" class="select-label">
+                        {{ modelOverrideLabel }}:
+                    </NText>
+                    <div class="select-wrapper">
+                        <slot name="model-override-select"></slot>
+                    </div>
+                </div>
+                </NSpace>
+
+                <!-- 控制按钮组 -->
+                <slot name="control-buttons"></slot>
+
+                <!-- 提交按钮 -->
+                <NButton
+                    type="primary"
+                    size="medium"
+                    @click="$emit('submit')"
+                    :loading="loading"
+                    :disabled="loading || disabled || !modelValue.trim()"
+                    style="min-width: 120px;"
+                >
+                    {{ loading ? loadingText : buttonText }}
+                </NButton>
+            </NFlex>
         </NFlex>
     </NSpace>
 
@@ -348,8 +357,32 @@ const handleAddMissingVariable = (varName: string) => {
 .inline-select-item {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
-  gap: 8px;
+  flex-shrink: 1;
+  gap: 0;
+  min-width: 0;
+}
+
+.select-label {
+  font-size: 14px;
+  white-space: nowrap;
+  line-height: 36px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.select-wrapper {
+  max-width: 160px;
+  min-width: 120px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.bottom-select-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
 }
 
 @media (max-width: 1400px) {
