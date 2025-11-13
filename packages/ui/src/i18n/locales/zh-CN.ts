@@ -418,6 +418,8 @@ export default {
     export: "导出",
     originalPrompt: "原始提示词",
     optimizeModel: "优化模型",
+    modelOverride: "模型切换",
+    modelOverridePlaceholder: "选择具体模型（可选）",
     templateLabel: "优化提示词",
     originalPromptPlaceholder: "请输入需要优化的原始提示词...",
 
@@ -1195,6 +1197,8 @@ export default {
       testProcessError: "测试过程中发生错误",
       initTemplateFailed: "初始化模板选择失败",
       appInitFailed: "应用初始化失败，请刷新或联系支持",
+      noModelSelected: "请先选择优化模型",
+      fetchModelListFailed: "获取模型列表失败",
     },
     success: {
       optimizeSuccess: "优化成功",
@@ -1207,10 +1211,12 @@ export default {
       historyLoaded: "历史记录已加载",
       exitCompare: "已退出对比模式",
       compareEnabled: "对比模式已启用",
+      modelListFetched: "成功获取 {count} 个可用模型",
     },
     warn: {
       loadOptimizeTemplateFailed: "加载已保存的优化提示词失败",
       loadIterateTemplateFailed: "加载已保存的迭代提示词失败",
+      noModelsAvailable: "没有可用的模型",
     },
     info: {
       modelUpdated: "模型已更新",

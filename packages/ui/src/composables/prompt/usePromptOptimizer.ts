@@ -79,8 +79,8 @@ export function usePromptOptimizer(
   currentVersionId: '',
   
   // 方法 (将在下面定义并绑定到 state)
-  handleOptimizePrompt: async () => {},
-  handleOptimizePromptWithContext: async (_advancedContext: AdvancedContextPayload) => {},
+  handleOptimizePrompt: async (_modelOverride?: string) => {},
+  handleOptimizePromptWithContext: async (_advancedContext: AdvancedContextPayload, _modelOverride?: string) => {},
   handleIteratePrompt: async (payload: { originalPrompt: string, optimizedPrompt: string, iterateInput: string }) => {},
   handleSwitchVersion: async (version: PromptChain['versions'][number]) => {}
 })
@@ -88,7 +88,7 @@ export function usePromptOptimizer(
   // 注意：存储键现在由 useTemplateManager 统一管理
   
   // 优化提示词
-  state.handleOptimizePrompt = async () => {
+  state.handleOptimizePrompt = async (modelOverride?: string) => {
     if (!state.prompt.trim() || state.isOptimizing) return
 
     // 根据优化模式选择对应的模板
@@ -121,6 +121,7 @@ export function usePromptOptimizer(
         targetPrompt: state.prompt,
         templateId: currentTemplate.id,
         modelKey: optimizeModel.value,
+        modelOverride: modelOverride,  // 🆕 传递模型覆盖参数
         contextMode: contextMode?.value  // 传递上下文模式
       }
 
@@ -196,7 +197,7 @@ export function usePromptOptimizer(
   }
   
   // 带上下文的优化提示词
-  state.handleOptimizePromptWithContext = async (advancedContext: AdvancedContextPayload) => {
+  state.handleOptimizePromptWithContext = async (advancedContext: AdvancedContextPayload, modelOverride?: string) => {
     if (!state.prompt.trim() || state.isOptimizing) return
 
     // 根据优化模式选择对应的模板
@@ -229,6 +230,7 @@ export function usePromptOptimizer(
         targetPrompt: state.prompt,
         templateId: currentTemplate.id,
         modelKey: optimizeModel.value,
+        modelOverride: modelOverride,  // 🆕 传递模型覆盖参数
         contextMode: contextMode?.value,  // 传递上下文模式
         // 关键：添加高级上下文
         advancedContext: {

@@ -66,6 +66,7 @@ export interface OptimizationRequest {
   targetPrompt: string; // 待优化的提示词
   templateId?: string;
   modelKey: string;
+  modelOverride?: string; // 🆕 模型覆盖：指定具体的模型ID（如果提供，将覆盖modelKey中配置的默认模型）
   // 🆕 上下文模式（用于变量替换策略）
   contextMode?: import("../context/types").ContextMode;
   // 新增：高级模式上下文（可选，保持向后兼容）

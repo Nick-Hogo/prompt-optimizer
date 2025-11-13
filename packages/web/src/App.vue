@@ -516,6 +516,9 @@
                                         :model-label="
                                             $t('promptOptimizer.optimizeModel')
                                         "
+                                        :model-override-label="
+                                            $t('promptOptimizer.modelOverride')
+                                        "
                                         :template-label="
                                             $t('promptOptimizer.templateLabel')
                                         "
@@ -563,6 +566,17 @@
                                                 @config="
                                                     modelManager.showConfig = true
                                                 "
+                                            />
+                                        </template>
+                                        <template #model-override-select>
+                                            <ModelOverrideSelector
+                                                v-model="modelOverrideValue"
+                                                :options="modelOverrideOptions"
+                                                :loading="isLoadingModelList"
+                                                :disabled="optimizer.isOptimizing"
+                                                :placeholder="t('promptOptimizer.modelOverridePlaceholder')"
+                                                size="medium"
+                                                @refresh="handleRefreshModelOverrideList"
                                             />
                                         </template>
                                         <template #template-select>
@@ -1014,6 +1028,7 @@ import {
     PromptPreviewPanel,
     ContextSystemWorkspace,
     ContextUserWorkspace,
+    ModelOverrideSelector,
 
     // Composables
     usePromptOptimizer,
@@ -1167,6 +1182,12 @@ const saveFavoriteData = ref<{
     originalContent?: string;
 } | null>(null);
 const optimizeModelSelect = ref(null);
+
+// 模型覆盖选择器状态
+const modelOverrideValue = ref<string | undefined>(undefined);
+const modelOverrideOptions = ref<Array<{ label: string; value: string }>>([]);
+const isLoadingModelList = ref(false);
+
 type ContextWorkspaceExpose = {
     testAreaPanelRef?: Ref<TestAreaPanelInstance | null>;
 };
@@ -1583,6 +1604,33 @@ const refreshTextModels = async () => {
     }
 };
 
+// 获取可用模型列表（用于模型覆盖选择器）
+const handleRefreshModelOverrideList = async () => {
+    if (!services.value?.llmService || !modelManager.selectedOptimizeModel) {
+        toast.error(t('toast.error.noModelSelected'));
+        return;
+    }
+
+    try {
+        isLoadingModelList.value = true;
+        const provider = modelManager.selectedOptimizeModel;
+        const models = await services.value.llmService.fetchModelList(provider);
+        modelOverrideOptions.value = models;
+        
+        if (models.length > 0) {
+            toast.success(t('toast.success.modelListFetched', { count: models.length }));
+        } else {
+            toast.warning(t('toast.warning.noModelsAvailable'));
+        }
+    } catch (error: any) {
+        console.error('[App] Failed to fetch model list:', error);
+        toast.error(t('toast.error.fetchModelListFailed') + ': ' + error.message);
+        modelOverrideOptions.value = [];
+    } finally {
+        isLoadingModelList.value = false;
+    }
+};
+
 const selectedTemplateIdForSelect = computed<string>({
     get() {
         const current = currentSelectedTemplate.value;
@@ -1626,6 +1674,19 @@ watch(
         }
     },
     { immediate: true },
+);
+
+watch(
+    () => modelManager.selectedOptimizeModel,
+    async (newModel) => {
+        if (newModel && services.value?.llmService) {
+            modelOverrideValue.value = undefined;
+            await handleRefreshModelOverrideList();
+            if (modelOverrideOptions.value.length > 0) {
+                modelOverrideValue.value = modelOverrideOptions.value[0].value;
+            }
+        }
+    },
 );
 
 watch(
@@ -1709,11 +1770,11 @@ const handleOptimizePrompt = () => {
                     : undefined, // 🆕 添加工具传递
         };
 
-        // 使用带上下文的优化
-        optimizer.handleOptimizePromptWithContext(advancedContext);
+        // 使用带上下文的优化，传递 modelOverride
+        optimizer.handleOptimizePromptWithContext(advancedContext, modelOverrideValue.value);
     } else {
-        // 使用基础优化
-        optimizer.handleOptimizePrompt();
+        // 使用基础优化，传递 modelOverride
+        optimizer.handleOptimizePrompt(modelOverrideValue.value);
     }
 };
 

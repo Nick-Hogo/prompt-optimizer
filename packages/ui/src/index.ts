@@ -58,6 +58,7 @@ export { default as TemplateManagerUI } from "./components/TemplateManager.vue";
 export { default as TemplateSelectUI } from "./components/TemplateSelect.vue";
 export { default as ModelSelectUI } from "./components/ModelSelect.vue";
 export { default as SelectWithConfig } from "./components/SelectWithConfig.vue";
+export { default as ModelOverrideSelector } from "./components/ModelOverrideSelector.vue";
 export { default as HistoryDrawerUI } from "./components/HistoryDrawer.vue";
 export { default as InputPanelUI } from "./components/InputPanel.vue";
 export { default as MainLayoutUI } from "./components/MainLayout.vue";

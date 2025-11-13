@@ -11,8 +11,20 @@
                 :mode="adaptiveInputMode"
                 :size="inputSize"
                 :enable-fullscreen="enableFullscreen"
-                :style="{ marginBottom: '16px' }"
+                :style="{ marginBottom: '12px' }"
             />
+            
+            <!-- 测试内容专用模型选择器 -->
+            <NCard size="small" :bordered="true" :style="{ marginBottom: '16px' }">
+                <NFlex justify="space-between" align="center">
+                    <NText :depth="2" style="font-size: 14px; font-weight: 500;">
+                        {{ t('test.model') }}：
+                    </NText>
+                    <div style="flex: 1; max-width: 300px;">
+                        <slot name="model-select"></slot>
+                    </div>
+                </NFlex>
+            </NCard>
         </div>
 
         <!-- 变量值输入表单 (完整实现) -->
@@ -269,6 +281,7 @@ import {
     NEmpty,
     NModal,
     NFormItem,
+    NText,
 } from "naive-ui";
 import type {
     OptimizationMode,
