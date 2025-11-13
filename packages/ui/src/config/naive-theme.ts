@@ -81,7 +81,12 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
         colorPressed: '#d9dce2',
         border: '1px solid #e5e7eb',
         borderHover: '1px solid #d5d7dc',
-        borderPressed: '1px solid #c4c7cd'
+        borderPressed: '1px solid #c4c7cd',
+        heightMedium: '36px',
+        fontSizeMedium: '14px',
+        fontWeightStrong: '500',
+        borderRadius: '6px',
+        paddingMedium: '0 16px'
       },
       Input: {
         color: '#f7f8fa',
@@ -105,7 +110,12 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
         boxShadowFocus: '0 0 0 2px rgba(75, 85, 99, 0.12)',
         caretColor: '#4b5563',
         suffixTextColor: '#6b7280',
-        prefixTextColor: '#6b7280'
+        prefixTextColor: '#6b7280',
+        heightMedium: '36px',
+        fontSizeMedium: '14px',
+        borderRadius: '6px',
+        paddingMedium: '0 12px',
+        lineHeight: '1.6'
       },
       Card: {
         color: '#ffffff',
@@ -113,12 +123,15 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
         colorTarget: '#ffffff',
         textColor: '#1f2933',
         titleTextColor: '#181f2a',
+        titleFontWeight: '600',
         borderColor: '#e5e7eb',
         actionColor: '#f4f5f7',
         closeIconColor: '#9ca3af',
         closeIconColorHover: '#6b7280',
         closeIconColorPressed: '#4b5563',
-        boxShadow: '0 12px 28px rgba(15, 23, 42, 0.08)'
+        borderRadius: '8px',
+        paddingMedium: '20px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)'
       },
       Tabs: {
         tabColor: '#f3f4f6',

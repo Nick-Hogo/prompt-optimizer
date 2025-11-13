@@ -1,10 +1,10 @@
 <!-- 输入面板组件 - 纯Naive UI实现 -->
 <template>
-    <NSpace vertical :size="16">
+    <NSpace vertical :size="20">
         <!-- 标题区域 -->
         <NFlex justify="space-between" align="center" :wrap="false">
-            <NFlex align="center" :size="12" style="min-width: 0; flex: 1;">
-                <NText :depth="1" style="font-size: 18px; font-weight: 500; white-space: nowrap;">{{
+            <NFlex align="center" :size="16" style="min-width: 0; flex: 1;">
+                <NText :depth="1" style="font-size: 20px; font-weight: 600; white-space: nowrap; line-height: 1.5;">{{
                     label
                 }}</NText>
                 <!-- 🆕 帮助提示图标 -->
@@ -50,30 +50,30 @@
                     <NSpace :size="8" align="center" :wrap="false">
                         <!-- 模型选择 -->
                         <div v-if="modelLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 13px; margin-right: 6px; white-space: nowrap;">
+                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
                                 {{ modelLabel }}:
                             </NText>
-                            <div style="width: 150px; flex-shrink: 0;">
+                            <div style="max-width: 150px; min-width: 120px; flex: 1;">
                                 <slot name="model-select"></slot>
                             </div>
                         </div>
 
                         <!-- 模型覆盖选择器 (新增) -->
                         <div v-if="modelOverrideLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 13px; margin-right: 6px; white-space: nowrap;">
+                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
                                 {{ modelOverrideLabel }}:
                             </NText>
-                            <div style="width: 160px; flex-shrink: 0;">
+                            <div style="max-width: 160px; min-width: 120px; flex: 1;">
                                 <slot name="model-override-select"></slot>
                             </div>
                         </div>
 
                         <!-- 提示词模板选择 -->
                         <div v-if="templateLabel" class="inline-select-item">
-                            <NText :depth="3" style="font-size: 13px; margin-right: 6px; white-space: nowrap;">
+                            <NText :depth="3" style="font-size: 14px; margin-right: 8px; white-space: nowrap; line-height: 1.5;">
                                 {{ templateLabel }}:
                             </NText>
-                            <div style="width: 160px; flex-shrink: 0;">
+                            <div style="max-width: 160px; min-width: 120px; flex: 1;">
                                 <slot name="template-select"></slot>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                 </div>
             </NFlex>
 
-            <NFlex align="center" :size="12" style="flex-shrink: 0;">
+            <NFlex align="center" :size="16" style="flex-shrink: 0;">
                 <!-- 预览按钮 -->
                 <NButton
                     v-if="showPreview"
@@ -338,8 +338,8 @@ const handleAddMissingVariable = (varName: string) => {
 .inline-selectors {
   display: flex;
   align-items: center;
-  margin-left: 12px;
-  padding-left: 12px;
+  margin-left: 16px;
+  padding-left: 16px;
   border-left: 1px solid var(--n-border-color);
   flex-shrink: 1;
   min-width: 0;
@@ -349,6 +349,7 @@ const handleAddMissingVariable = (varName: string) => {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  gap: 8px;
 }
 
 @media (max-width: 1400px) {

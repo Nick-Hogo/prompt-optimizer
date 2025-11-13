@@ -9,6 +9,7 @@
 - [项目结构](./project-structure.md) - 项目文件和目录组织说明
 - [AI开发流程规范](./ai-development-workflow.md) - AI辅助开发的标准化流程
 - [通用开发经验](./general-experience.md) - 项目开发中的通用经验与最佳实践
+- [UI布局最佳实践](./ui-layout-best-practices.md) - 响应式布局和主题系统使用规范
 
 ## 📱 平台开发指南
 

@@ -487,7 +487,7 @@
                                 flexDirection: 'row',
                                 width: '100%',
                                 'max-height': '100%',
-                                gap: '16px',
+                                gap: '20px',
                             }"
                         >
                             <!-- 左侧：优化区域 -->
