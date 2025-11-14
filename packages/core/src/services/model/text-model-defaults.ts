@@ -490,7 +490,9 @@ export function createDefaultTextModels(envVars: {
         apiKey: '',
         baseURL: 'http://127.0.0.1:8080/v1'
       },
-      paramOverrides: {},
+      paramOverrides: {
+        max_tokens: 8192
+      },
       customParamOverrides: {}
     },
     // openai: {

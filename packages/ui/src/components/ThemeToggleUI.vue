@@ -77,40 +77,23 @@ const createThemeIcon = (themeId: string, isColored: boolean = false) => {
         })
       ])
 
-    case 'classic':
+    case 'macaron':
       return h('svg', {
         class: `${baseClass}`,
-        style: isColored ? 'color: #b08968;' : undefined,
+        style: isColored ? 'color: #BBEFCD;' : undefined, // macaron green
         viewBox: '0 0 24 24',
-        fill: 'currentColor'
+        fill: 'none',
+        stroke: 'currentColor',
+        'stroke-width': '2',
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round'
       }, [
-        h('path', {
-          d: 'M12 3a9 9 0 011.8 17.823l-.3.06a1 1 0 01-.202.017H8.5a4.5 4.5 0 01-4.5-4.5v-3.13a1 1 0 01.21-.617l3.2-3.99A5 5 0 0112 3zm-.45 2.028a3 3 0 00-2.07 1.102l-3.2 3.99a2 2 0 00-.29.508V16.4A2.5 2.5 0 008.5 18.9h4.447A7 7 0 0011.55 5.028z'
-        })
-      ])
-
-    case 'green':
-      return h('svg', {
-        class: `${baseClass}`,
-        style: isColored ? 'color: #16a34a;' : undefined, // green-600
-        viewBox: '0 0 24 24',
-        fill: 'currentColor'
-      }, [
-        h('path', {
-          d: 'M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z'
-        })
-      ])
-      
-    case 'purple':
-      return h('svg', {
-        class: `${baseClass}`,
-        style: isColored ? 'color: #9333ea;' : undefined, // purple-600
-        viewBox: '0 0 24 24',
-        fill: 'currentColor'
-      }, [
-        h('path', {
-          d: 'M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z'
-        })
+        // 马卡龙图标 - 甜甜圈形状
+        h('circle', { cx: '12', cy: '12', r: '8', fill: '#BBEFCD', stroke: '#8FDFAE', 'stroke-width': '1.5' }),
+        h('circle', { cx: '12', cy: '12', r: '4', fill: '#FFFCE0', stroke: '#FDE980', 'stroke-width': '1.5' }),
+        h('circle', { cx: '9', cy: '10', r: '1', fill: '#FDDCC4' }),
+        h('circle', { cx: '15', cy: '10', r: '1', fill: '#FDDCC4' }),
+        h('circle', { cx: '12', cy: '14', r: '1', fill: '#FDE980' })
       ])
     
     default:

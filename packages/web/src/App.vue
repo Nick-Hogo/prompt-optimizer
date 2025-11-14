@@ -73,15 +73,6 @@
                         :round="true"
                     />
                     <ActionButtonUI
-                        icon="⚙️"
-                        :text="$t('nav.modelManager')"
-                        @click="modelManager.showConfig = true"
-                        type="default"
-                        size="medium"
-                        :ghost="false"
-                        :round="true"
-                    />
-                    <ActionButtonUI
                         icon="⭐"
                         :text="$t('nav.favorites')"
                         @click="showFavoriteManager = true"
@@ -1939,7 +1930,7 @@ watch(
 
 // 打开GitHub仓库
 const openGithubRepo = async () => {
-    const url = "https://github.com/linshenkx/prompt-optimizer";
+    const url = "https://github.com/guanhuhao/prompt-optimizer";
 
     // 检查是否在Electron环境中
     if (typeof window !== "undefined" && (window as any).electronAPI) {

@@ -68,7 +68,7 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { NLayout, NLayoutHeader, NLayoutContent, NFlex, NImage, NText } from 'naive-ui'
 import { ToastUI } from '../index'
-import logoImage from '../assets/logo.jpg'
+import logoImage from '../assets/guda-logo.png'
 
 const { t } = useI18n()
 
@@ -79,8 +79,8 @@ const logoSrc = logoImage
 const createFallbackSvg = () => {
   const svg = `data:image/svg+xml,${encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="6" fill="#3b82f6"/>
-      <text x="16" y="21" text-anchor="middle" fill="white" font-family="system-ui" font-size="14" font-weight="bold">P</text>
+      <rect width="32" height="32" rx="6" fill="#BBEFCD"/>
+      <text x="16" y="21" text-anchor="middle" fill="#3F5A40" font-family="system-ui" font-size="14" font-weight="bold">G</text>
     </svg>
   `)}`
   return svg
@@ -110,11 +110,11 @@ onUnmounted(() => {
 
 const logoSize = computed(() => {
   if (windowWidth.value < 480) {
-    return 20 // 超小屏幕
+    return 56 // 超小屏幕（再放大一倍）
   } else if (windowWidth.value < 640) {
-    return 24 // 小屏幕
+    return 64 // 小屏幕（再放大一倍）
   }
-  return 28 // 默认尺寸
+  return 72 // 默认尺寸（再放大一倍）
 })
 </script>
 
@@ -138,15 +138,17 @@ const logoSize = computed(() => {
 /* 增强导航栏样式 */
 .nav-header-enhanced {
   min-height: 64px !important;
-  padding: 12px 16px !important;
+  padding: 12px 20px !important;
 }
 
 .nav-content {
   min-height: 40px;
+  gap: 16px;
 }
 
 .nav-actions {
   min-height: 40px;
+  gap: 10px;
 }
 
 /* Logo样式优化 */
@@ -173,38 +175,44 @@ const logoSize = computed(() => {
   align-items: center;
   margin-left: 16px;
   padding-left: 16px;
-  border-left: 1px solid var(--border-color, rgba(239, 239, 245, 0.6));
+  border-left: 1.5px solid rgba(187, 239, 205, 0.3);
   min-height: 32px;
 }
 
 .core-navigation :deep(.function-mode-selector) {
-  transform: scale(1.05);
+  transform: scale(1.0);
 }
 
 .core-navigation :deep(.n-radio-group) {
-  background: var(--modal-color, #fff);
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--border-color, rgba(239, 239, 245, 0.6));
+  background: rgba(248, 252, 245, 0.8);
+  border-radius: 12px;
+  padding: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05),
+              0 1px 4px rgba(0, 0, 0, 0.03);
+  border: 1.5px solid rgba(224, 247, 232, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 .core-navigation :deep(.n-radio-button) {
   font-weight: 500;
-  min-width: 60px;
-  border-radius: 6px !important;
-  transition: all 0.2s ease;
+  min-width: 68px;
+  border-radius: 9px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.02em;
 }
 
 .core-navigation :deep(.n-radio-button--checked) {
-  background: var(--primary-color) !important;
-  color: white !important;
+  background: linear-gradient(135deg, #BBEFCD 0%, #A5E7BE 100%) !important;
+  color: #3F5A40 !important;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 8px rgba(187, 239, 205, 0.35),
+              0 1px 3px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .core-navigation :deep(.n-radio-button:not(.n-radio-button--checked):hover) {
-  background: var(--hover-color, rgba(0, 0, 0, 0.06));
+  background: rgba(232, 250, 240, 0.8);
+  transform: translateY(-0.5px);
 }
 
 /* 响应式优化 */

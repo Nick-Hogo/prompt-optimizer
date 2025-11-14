@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { darkTheme, lightTheme, type GlobalThemeOverrides, type GlobalTheme } from 'naive-ui'
 
 // 当前主题ID
-export const currentThemeId = ref<string>('blue')
+export const currentThemeId = ref<string>('macaron')
 
 // 主题类型定义
 export interface ThemeConfig {
@@ -315,437 +315,9 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     }
   },
 
-  classic: {
-    id: 'classic',
-    name: '米杏模式',
-    naiveTheme: lightTheme,
-    themeOverrides: {
-      common: {
-        primaryColor: '#7b6a58',
-        primaryColorHover: '#6a5a4a',
-        primaryColorPressed: '#594a3d',
-        primaryColorSuppl: '#d7ccbc',
-        successColor: '#059669',
-        successColorHover: '#047857',
-        successColorPressed: '#065f46',
-        successColorSuppl: '#dcfce7',
-        errorColor: '#dc2626',
-        errorColorHover: '#b91c1c',
-        errorColorPressed: '#991b1b',
-        errorColorSuppl: '#fee2e2',
-        bodyColor: '#f5f2ec',
-        cardColor: '#fefcf8',
-        modalColor: '#f9f5ef',
-        popoverColor: '#fefcf8',
-        tableColor: '#f7f1e8',
-        inputColor: '#f8f4ee',
-        hoverColor: 'rgba(123, 106, 88, 0.08)',
-        textColorBase: '#403830',
-        textColor1: '#403830',
-        textColor2: '#6a6156',
-        textColor3: '#968d82',
-        placeholderColor: '#b0a79c',
-        borderColor: '#e3d7c7',
-        dividerColor: '#ede3d6',
-        scrollbarColor: 'rgba(141, 126, 110, 0.4)',
-        scrollbarColorHover: 'rgba(123, 106, 88, 0.55)',
-        closeIconColor: 'rgba(103, 92, 80, 0.7)',
-        closeIconColorHover: '#675c50',
-        closeIconColorPressed: '#51473d',
-        clearColor: 'rgba(123, 106, 88, 0.2)',
-        clearColorHover: 'rgba(123, 106, 88, 0.3)',
-        clearColorPressed: 'rgba(123, 106, 88, 0.4)',
-        boxShadow1: '0 6px 20px rgba(87, 69, 55, 0.08)',
-        boxShadow2: '0 12px 32px rgba(87, 69, 55, 0.12)'
-      },
-      Button: {
-        textColorPrimary: '#3f382f',
-        textColorHoverPrimary: '#3f382f',
-        textColorPressedPrimary: '#3f382f',
-        textColorFocusPrimary: '#3f382f',
-        textColorDisabledPrimary: 'rgba(63, 56, 47, 0.4)',
-        colorPrimary: '#d7ccbc',
-        colorHoverPrimary: '#cabfaa',
-        colorPressedPrimary: '#beb29a',
-        colorFocusPrimary: '#d7ccbc',
-        colorDisabledPrimary: '#e5dbcf',
-        borderPrimary: '1px solid #cabfaa',
-        borderHoverPrimary: '1px solid #b9ac96',
-        borderPressedPrimary: '1px solid #a59782',
-        borderFocusPrimary: '1px solid #cabfaa',
-        borderDisabledPrimary: '1px solid #e2d6c7',
-        rippleColorPrimary: 'rgba(123, 106, 88, 0.35)',
-        textColor: '#4c443c',
-        textColorHover: '#3f382f',
-        textColorPressed: '#3f382f',
-        color: '#f6f1ea',
-        colorHover: '#ede3d6',
-        colorPressed: '#e1d6c7',
-        border: '1px solid #e3d7c7',
-        borderHover: '1px solid #d8ccba',
-        borderPressed: '1px solid #cbbca5'
-      },
-      Input: {
-        color: '#f8f4ee',
-        colorDisabled: '#f3ede5',
-        colorFocus: '#fefbf7',
-        textColor: '#403830',
-        textColorDisabled: 'rgba(64, 56, 48, 0.45)',
-        placeholderColor: '#b0a79c',
-        placeholderColorDisabled: 'rgba(176, 167, 156, 0.6)',
-        iconColor: '#a29688',
-        iconColorHover: '#877b6d',
-        iconColorPressed: '#6e6256',
-        iconColorDisabled: 'rgba(162, 150, 136, 0.5)',
-        clearColor: 'rgba(123, 106, 88, 0.2)',
-        clearColorHover: 'rgba(123, 106, 88, 0.32)',
-        clearColorPressed: 'rgba(123, 106, 88, 0.45)',
-        border: '1px solid #d8cdbd',
-        borderDisabled: '1px solid rgba(216, 205, 189, 0.6)',
-        borderHover: '1px solid #cbbfae',
-        borderFocus: '1px solid #bfae99',
-        boxShadowFocus: '0 0 0 2px rgba(123, 106, 88, 0.16)',
-        caretColor: '#7b6a58',
-        suffixTextColor: '#8a7c6c',
-        prefixTextColor: '#8a7c6c'
-      },
-      Card: {
-        color: '#fefcf8',
-        colorModal: '#fefcf8',
-        colorTarget: '#fefcf8',
-        textColor: '#403830',
-        titleTextColor: '#3a332b',
-        borderColor: '#e3d7c7',
-        actionColor: '#f3eadf',
-        closeIconColor: '#8f8376',
-        closeIconColorHover: '#6e6256',
-        closeIconColorPressed: '#5a4f45',
-        boxShadow: '0 12px 32px rgba(87, 69, 55, 0.12)'
-      },
-      Tabs: {
-        tabColor: '#f1ece4',
-        tabColorActive: '#e4d8c8',
-        tabBorderColor: '#e3d7c7',
-        tabTextColorBar: '#6a6156',
-        tabTextColorBarHover: '#4d453c',
-        tabTextColorBarActive: '#4d453c',
-        tabTextColorCard: '#6a6156',
-        tabTextColorCardActive: '#3f382f',
-        barColor: '#d2c5b5'
-      },
-      Radio: {
-        buttonBorderColor: '#e3d7c7',
-        buttonBorderColorActive: '#cabfaa',
-        buttonColor: '#f6f1ea',
-        buttonColorActive: '#d7ccbc',
-        buttonTextColor: '#6a6156',
-        buttonTextColorActive: '#3f382f'
-      },
-      Dropdown: {
-        color: '#fefcf8',
-        optionTextColor: '#4c443c',
-        optionTextColorHover: '#3f382f',
-        optionTextColorActive: '#3f382f',
-        optionColorHover: '#ede3d6',
-        optionColorActive: '#e1d6c7',
-        borderColor: '#e3d7c7'
-      }
-    }
-  },
-
-  green: {
-    id: 'green',
-    name: '绿色模式',
-    naiveTheme: darkTheme,
-    themeOverrides: {
-      common: {
-        primaryColor: '#1fb598',
-        primaryColorHover: '#1aa184',
-        primaryColorPressed: '#16846c',
-        primaryColorSuppl: '#57e4c8',
-        bodyColor: '#0f342b',
-        cardColor: '#174737',
-        modalColor: '#174737',
-        popoverColor: '#174737',
-        tableColor: '#1b4f3d',
-        tableHeaderColor: '#1f5f49',
-        inputColor: '#1d5240',
-        codeColor: '#1f5f49',
-        tabColor: '#1f5f49',
-        actionColor: '#1f5f49',
-        textColorBase: '#e9fbf4',
-        textColor1: 'rgba(233, 251, 244, 0.96)',
-        textColor2: 'rgba(233, 251, 244, 0.82)',
-        textColor3: 'rgba(233, 251, 244, 0.6)',
-        textColorDisabled: 'rgba(233, 251, 244, 0.4)',
-        placeholderColor: 'rgba(197, 239, 224, 0.7)',
-        placeholderColorDisabled: 'rgba(197, 239, 224, 0.45)',
-        iconColor: 'rgba(207, 246, 232, 0.75)',
-        iconColorHover: 'rgba(207, 246, 232, 0.88)',
-        iconColorPressed: '#e9fbf4',
-        iconColorDisabled: 'rgba(207, 246, 232, 0.45)',
-        borderColor: 'rgba(47, 128, 109, 0.45)',
-        dividerColor: 'rgba(47, 128, 109, 0.25)',
-        scrollbarColor: 'rgba(38, 108, 92, 0.35)',
-        scrollbarColorHover: 'rgba(38, 108, 92, 0.55)',
-        closeIconColor: 'rgba(207, 246, 232, 0.7)',
-        closeIconColorHover: 'rgba(207, 246, 232, 0.88)',
-        closeIconColorPressed: '#e9fbf4',
-        clearColor: 'rgba(233, 251, 244, 0.6)',
-        clearColorHover: 'rgba(233, 251, 244, 0.75)',
-        clearColorPressed: 'rgba(233, 251, 244, 0.9)',
-        successColor: '#3dd68c',
-        successColorHover: '#2fb973',
-        successColorPressed: '#258f59',
-        successColorSuppl: '#174f3b',
-        errorColor: '#ff6b6b',
-        errorColorHover: '#f05252',
-        errorColorPressed: '#c73f3f',
-        errorColorSuppl: '#4d2020'
-      },
-      Button: {
-        textColorPrimary: '#0f342b',
-        textColorHoverPrimary: '#0b271f',
-        textColorPressedPrimary: '#092017',
-        textColorFocusPrimary: '#0f342b',
-        textColorDisabledPrimary: 'rgba(15, 52, 43, 0.82)',
-        colorPrimary: '#57e4c8',
-        colorHoverPrimary: '#3fd2b4',
-        colorPressedPrimary: '#2eb39a',
-        colorFocusPrimary: '#57e4c8',
-        colorDisabledPrimary: '#459f8d',
-        borderPrimary: '1px solid #3fd2b4',
-        borderHoverPrimary: '1px solid #2eb39a',
-        borderPressedPrimary: '1px solid #258f76',
-        borderFocusPrimary: '1px solid #3fd2b4',
-        borderDisabledPrimary: '1px solid rgba(63, 210, 180, 0.35)',
-        rippleColorPrimary: 'rgba(63, 210, 180, 0.35)',
-        textColor: 'rgba(233, 251, 244, 0.88)',
-        textColorHover: '#e9fbf4',
-        textColorPressed: '#c5efe0',
-        color: '#194638',
-        colorHover: '#1e5443',
-        colorPressed: '#184638',
-        border: '1px solid rgba(63, 210, 180, 0.28)',
-        borderHover: '1px solid rgba(63, 210, 180, 0.4)',
-        borderPressed: '1px solid rgba(63, 210, 180, 0.52)'
-      },
-      Input: {
-        color: '#1d5240',
-        colorDisabled: '#1a4a3a',
-        colorFocus: '#205845',
-        textColor: '#e9fbf4',
-        textColorDisabled: 'rgba(233, 251, 244, 0.55)',
-        placeholderColor: 'rgba(197, 239, 224, 0.7)',
-        placeholderColorDisabled: 'rgba(197, 239, 224, 0.45)',
-        iconColor: 'rgba(197, 239, 224, 0.75)',
-        iconColorHover: '#c5efe0',
-        iconColorPressed: '#e9fbf4',
-        iconColorDisabled: 'rgba(197, 239, 224, 0.4)',
-        clearColor: 'rgba(233, 251, 244, 0.6)',
-        clearColorHover: 'rgba(233, 251, 244, 0.75)',
-        clearColorPressed: 'rgba(233, 251, 244, 0.9)',
-        border: '1px solid rgba(63, 210, 180, 0.32)',
-        borderDisabled: '1px solid rgba(63, 210, 180, 0.18)',
-        borderHover: '1px solid rgba(63, 210, 180, 0.45)',
-        borderFocus: '1px solid #57e4c8',
-        boxShadowFocus: '0 0 0 2px rgba(87, 228, 200, 0.16)',
-        loadingColor: '#57e4c8',
-        suffixTextColor: 'rgba(233, 251, 244, 0.8)',
-        prefixTextColor: 'rgba(233, 251, 244, 0.8)'
-      },
-      Card: {
-        color: '#174737',
-        colorModal: '#174737',
-        colorTarget: '#174737',
-        textColor: '#e9fbf4',
-        titleTextColor: '#def7ef',
-        borderColor: 'rgba(63, 210, 180, 0.28)',
-        actionColor: '#205845',
-        closeIconColor: 'rgba(233, 251, 244, 0.7)',
-        closeIconColorHover: '#c5efe0',
-        closeIconColorPressed: '#e9fbf4',
-        boxShadow: '0 18px 40px rgba(9, 32, 23, 0.45)'
-      },
-      Tabs: {
-        tabColor: '#1b4f3d',
-        tabColorActive: '#20614a',
-        tabBorderColor: 'rgba(63, 210, 180, 0.32)',
-        tabTextColorBar: 'rgba(233, 251, 244, 0.7)',
-        tabTextColorBarHover: '#c5efe0',
-        tabTextColorBarActive: '#e9fbf4',
-        tabTextColorCard: 'rgba(233, 251, 244, 0.7)',
-        tabTextColorCardActive: '#e9fbf4',
-        barColor: 'rgba(63, 210, 180, 0.6)'
-      },
-      Radio: {
-        buttonBorderColor: 'rgba(63, 210, 180, 0.32)',
-        buttonBorderColorActive: 'rgba(87, 228, 200, 0.6)',
-        buttonColor: '#1b4f3d',
-        buttonColorActive: '#20614a',
-        buttonTextColor: 'rgba(233, 251, 244, 0.7)',
-        buttonTextColorActive: '#e9fbf4'
-      },
-      Dropdown: {
-        color: '#174737',
-        optionTextColor: '#e9fbf4',
-        optionTextColorHover: '#c5efe0',
-        optionTextColorActive: '#0f342b',
-        optionColorHover: '#1f5f49',
-        optionColorActive: '#236b52',
-        borderColor: 'rgba(63, 210, 180, 0.32)'
-      }
-    }
-  },
-
-  purple: {
-    id: 'purple',
-    name: '暗紫模式',
-    naiveTheme: darkTheme,
-    themeOverrides: {
-      common: {
-        primaryColor: '#b47bff',
-        primaryColorHover: '#a060f7',
-        primaryColorPressed: '#8c4edf',
-        primaryColorSuppl: '#d6c3ff',
-        bodyColor: '#1f1633',
-        cardColor: '#2a1f45',
-        modalColor: '#2a1f45',
-        popoverColor: '#2a1f45',
-        tableColor: '#31255a',
-        tableHeaderColor: '#3b2d6a',
-        inputColor: '#342964',
-        codeColor: '#3b2d6a',
-        tabColor: '#3b2d6a',
-        actionColor: '#3b2d6a',
-        textColorBase: '#f5ecff',
-        textColor1: 'rgba(245, 236, 255, 0.94)',
-        textColor2: 'rgba(245, 236, 255, 0.78)',
-        textColor3: 'rgba(245, 236, 255, 0.58)',
-        textColorDisabled: 'rgba(245, 236, 255, 0.38)',
-        placeholderColor: 'rgba(214, 193, 255, 0.7)',
-        placeholderColorDisabled: 'rgba(214, 193, 255, 0.45)',
-        iconColor: 'rgba(225, 210, 255, 0.7)',
-        iconColorHover: 'rgba(225, 210, 255, 0.85)',
-        iconColorPressed: '#f5ecff',
-        iconColorDisabled: 'rgba(225, 210, 255, 0.45)',
-        borderColor: 'rgba(147, 111, 214, 0.35)',
-        dividerColor: 'rgba(147, 111, 214, 0.2)',
-        scrollbarColor: 'rgba(127, 85, 194, 0.35)',
-        scrollbarColorHover: 'rgba(127, 85, 194, 0.55)',
-        closeIconColor: 'rgba(225, 210, 255, 0.7)',
-        closeIconColorHover: '#e1d2ff',
-        closeIconColorPressed: '#f5ecff',
-        clearColor: 'rgba(225, 210, 255, 0.6)',
-        clearColorHover: 'rgba(225, 210, 255, 0.75)',
-        clearColorPressed: 'rgba(225, 210, 255, 0.9)',
-        successColor: '#5be0a2',
-        successColorHover: '#41c488',
-        successColorPressed: '#329a6a',
-        successColorSuppl: '#1c4b35',
-        errorColor: '#ff7aa2',
-        errorColorHover: '#f25c87',
-        errorColorPressed: '#c1426a',
-        errorColorSuppl: '#4b1f32'
-      },
-      Button: {
-        textColorPrimary: '#1f1633',
-        textColorHoverPrimary: '#1a122c',
-        textColorPressedPrimary: '#140d22',
-        textColorFocusPrimary: '#1f1633',
-        textColorDisabledPrimary: 'rgba(31, 22, 51, 0.82)',
-        colorPrimary: '#c9a5ff',
-        colorHoverPrimary: '#b98bff',
-        colorPressedPrimary: '#a069f3',
-        colorFocusPrimary: '#c9a5ff',
-        colorDisabledPrimary: '#7056b0',
-        borderPrimary: '1px solid #b98bff',
-        borderHoverPrimary: '1px solid #a069f3',
-        borderPressedPrimary: '1px solid #8a56db',
-        borderFocusPrimary: '1px solid #b98bff',
-        borderDisabledPrimary: '1px solid rgba(185, 139, 255, 0.35)',
-        rippleColorPrimary: 'rgba(185, 139, 255, 0.35)',
-        textColor: 'rgba(245, 236, 255, 0.88)',
-        textColorHover: '#f5ecff',
-        textColorPressed: '#d6c3ff',
-        color: '#2d204b',
-        colorHover: '#36275a',
-        colorPressed: '#402d6c',
-        border: '1px solid rgba(147, 111, 214, 0.3)',
-        borderHover: '1px solid rgba(147, 111, 214, 0.42)',
-        borderPressed: '1px solid rgba(147, 111, 214, 0.55)'
-      },
-      Input: {
-        color: '#342964',
-        colorDisabled: '#2f245a',
-        colorFocus: '#392c6c',
-        textColor: '#f5ecff',
-        textColorDisabled: 'rgba(245, 236, 255, 0.58)',
-        placeholderColor: 'rgba(214, 193, 255, 0.7)',
-        placeholderColorDisabled: 'rgba(214, 193, 255, 0.45)',
-        iconColor: 'rgba(214, 193, 255, 0.75)',
-        iconColorHover: '#d6c3ff',
-        iconColorPressed: '#f5ecff',
-        iconColorDisabled: 'rgba(214, 193, 255, 0.4)',
-        clearColor: 'rgba(225, 210, 255, 0.6)',
-        clearColorHover: 'rgba(225, 210, 255, 0.75)',
-        clearColorPressed: 'rgba(225, 210, 255, 0.9)',
-        border: '1px solid rgba(147, 111, 214, 0.35)',
-        borderDisabled: '1px solid rgba(147, 111, 214, 0.2)',
-        borderHover: '1px solid rgba(169, 129, 229, 0.45)',
-        borderFocus: '1px solid #b47bff',
-        boxShadowFocus: '0 0 0 2px rgba(180, 123, 255, 0.2)',
-        loadingColor: '#b47bff',
-        suffixTextColor: 'rgba(245, 236, 255, 0.78)',
-        prefixTextColor: 'rgba(245, 236, 255, 0.78)'
-      },
-      Card: {
-        color: '#2a1f45',
-        colorModal: '#2a1f45',
-        colorTarget: '#2a1f45',
-        textColor: '#f5ecff',
-        titleTextColor: '#fdf7ff',
-        borderColor: 'rgba(147, 111, 214, 0.35)',
-        actionColor: '#342964',
-        closeIconColor: 'rgba(225, 210, 255, 0.7)',
-        closeIconColorHover: '#d6c3ff',
-        closeIconColorPressed: '#f5ecff',
-        boxShadow: '0 18px 42px rgba(16, 8, 29, 0.45)'
-      },
-      Tabs: {
-        tabColor: '#342964',
-        tabColorActive: '#3f3277',
-        tabBorderColor: 'rgba(147, 111, 214, 0.35)',
-        tabTextColorBar: 'rgba(245, 236, 255, 0.75)',
-        tabTextColorBarHover: '#e1d2ff',
-        tabTextColorBarActive: '#f5ecff',
-        tabTextColorCard: 'rgba(245, 236, 255, 0.75)',
-        tabTextColorCardActive: '#f5ecff',
-        barColor: 'rgba(180, 123, 255, 0.6)'
-      },
-      Radio: {
-        buttonBorderColor: 'rgba(147, 111, 214, 0.35)',
-        buttonBorderColorActive: 'rgba(180, 123, 255, 0.55)',
-        buttonColor: '#342964',
-        buttonColorActive: '#403277',
-        buttonTextColor: 'rgba(245, 236, 255, 0.78)',
-        buttonTextColorActive: '#fdf7ff'
-      },
-      Dropdown: {
-        color: '#2a1f45',
-        optionTextColor: '#f5ecff',
-        optionTextColorHover: '#e1d2ff',
-        optionTextColorActive: '#1f1633',
-        optionColorHover: '#36275a',
-        optionColorActive: '#42317a',
-        borderColor: 'rgba(147, 111, 214, 0.35)'
-      }
-    }
-  },
-
-  guda: {
-    id: 'guda',
-    name: 'GuDa模式',
+  macaron: {
+    id: 'macaron',
+    name: '马卡龙模式',
     naiveTheme: lightTheme,
     themeOverrides: {
       common: {
@@ -800,26 +372,26 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
         colorPressedPrimary: '#8FDFAE',
         colorFocusPrimary: '#BBEFCD',
         colorDisabledPrimary: '#E0F7E8',
-        borderPrimary: '2px solid #BBEFCD',
-        borderHoverPrimary: '2px solid #A5E7BE',
-        borderPressedPrimary: '2px solid #8FDFAE',
-        borderFocusPrimary: '2px solid #BBEFCD',
-        borderDisabledPrimary: '2px solid #E0F7E8',
+        borderPrimary: '1.5px solid #BBEFCD',
+        borderHoverPrimary: '1.5px solid #A5E7BE',
+        borderPressedPrimary: '1.5px solid #8FDFAE',
+        borderFocusPrimary: '1.5px solid #BBEFCD',
+        borderDisabledPrimary: '1.5px solid #E0F7E8',
         rippleColorPrimary: 'rgba(187, 239, 205, 0.35)',
         textColor: '#5F5A50',
         textColorHover: '#3F5A40',
         textColorPressed: '#3F5A40',
-        color: '#E8FAF0',
-        colorHover: '#D1F5DC',
-        colorPressed: '#BBEFCD',
-        border: '2px solid #D1F5DC',
-        borderHover: '2px solid #BBEFCD',
-        borderPressed: '2px solid #A5E7BE',
+        color: '#F8FCF5',
+        colorHover: '#E8FAF0',
+        colorPressed: '#D1F5DC',
+        border: '1.5px solid #E0F7E8',
+        borderHover: '1.5px solid #BBEFCD',
+        borderPressed: '1.5px solid #A5E7BE',
         heightMedium: '36px',
         fontSizeMedium: '14px',
         fontWeightStrong: '500',
-        borderRadius: '10px',
-        paddingMedium: '0 18px'
+        borderRadius: '12px',
+        paddingMedium: '0 20px'
       },
       Input: {
         color: '#FFFEF5',
@@ -915,13 +487,6 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
             boxShadowFocus: '0 0 0 2px rgba(187, 239, 205, 0.2)'
           }
         }
-      },
-      Textarea: {
-        border: '2px solid #B8AE94',
-        borderDisabled: '2px solid rgba(184, 174, 148, 0.4)',
-        borderHover: '2px solid #BBEFCD',
-        borderFocus: '2px solid #A5E7BE',
-        boxShadowFocus: '0 0 0 3px rgba(187, 239, 205, 0.25)'
       }
     }
   }
@@ -982,13 +547,12 @@ export const initializeNaiveTheme = (): void => {
   } catch (error) {
     console.warn('Failed to load theme preference:', error)
   }
-  
-  // 如果没有保存的主题，使用系统偏好
+
+  // 如果没有保存的主题，使用 macaron 作为默认主题
   if (!savedTheme) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    savedTheme = prefersDark ? 'dark' : 'light'
+    savedTheme = 'macaron'
   }
-  
+
   // 应用主题
   switchTheme(savedTheme)
 }

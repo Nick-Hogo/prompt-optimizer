@@ -161,8 +161,11 @@
             :streaming="streaming"
             style="flex: 1; min-height: 0; overflow: auto;"
           />
-          <div v-else-if="!loading && !streaming" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-            <NEmpty :description="placeholder || t('common.noContent')" />
+          <div v-else-if="!loading && !streaming" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+            <img :src="waitingIcon" alt="waiting" style="width: auto; height: 120px; max-width: 200px; opacity: 0.85; object-fit: contain;" />
+            <NText style="font-size: 14px; color: var(--n-text-color-3, #999);">
+              {{ placeholder || t('common.noContent') }}
+            </NText>
           </div>
           <NText v-else style="padding: 12px;">{{ placeholder || t('common.loading') }}</NText>
         </div>
@@ -192,6 +195,7 @@ import { useTemporaryVariables } from '../composables/variable/useTemporaryVaria
 import { useVariableManager } from '../composables/prompt/useVariableManager'
 import type { AppServices } from '../types/services'
 import { platform } from '../utils/platform'
+import waitingIcon from '../assets/waiting.png'
 
 type ActionName = 'fullscreen' | 'diff' | 'copy' | 'edit' | 'reasoning' | 'favorite'
 

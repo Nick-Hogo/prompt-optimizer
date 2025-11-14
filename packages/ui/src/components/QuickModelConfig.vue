@@ -10,15 +10,14 @@
     @close="handleClose"
   >
     <NForm
-      label-placement="left"
-      label-width="100"
+      label-placement="top"
       size="medium"
       :show-feedback="false"
       class="config-form"
     >
       <NGrid :x-gap="16" :y-gap="12" :cols="24">
         <NGridItem :span="24">
-          <NFormItem :label="t('modelManager.apiKey')" label-align="left" required>
+          <NFormItem :label="t('modelManager.apiKey')" required>
             <NInput
               v-model:value="form.apiKey"
               type="password"
@@ -32,7 +31,7 @@
         </NGridItem>
 
         <NGridItem :span="12">
-          <NFormItem :label="t('modelManager.provider.label')" label-align="left">
+          <NFormItem :label="t('modelManager.provider.label')">
             <NSelect
               v-model:value="form.providerId"
               :options="providerOptions"
@@ -44,7 +43,7 @@
         </NGridItem>
 
         <NGridItem :span="12">
-          <NFormItem :label="t('modelManager.apiUrl')" label-align="left">
+          <NFormItem :label="t('modelManager.apiUrl')">
             <NInput
               v-model:value="form.baseURL"
               :placeholder="t('modelManager.apiUrlPlaceholder')"
@@ -54,7 +53,7 @@
         </NGridItem>
 
         <NGridItem :span="24">
-          <NFormItem :label="t('modelManager.selectModel')" label-align="left">
+          <NFormItem :label="t('modelManager.selectModel')">
             <div class="model-select-wrapper">
               <NSelect
                 v-model:value="form.modelId"
@@ -106,7 +105,7 @@
 
       <NGrid :x-gap="16" :y-gap="12" :cols="24" style="margin-top: 12px;">
         <NGridItem :span="12">
-          <NFormItem :label="t('modelManager.displayName')" label-align="left">
+          <NFormItem :label="t('modelManager.displayName')">
             <NInput
               v-model:value="form.displayName"
               :placeholder="t('modelManager.displayNamePlaceholder')"
@@ -116,7 +115,7 @@
         </NGridItem>
 
         <NGridItem :span="12">
-          <NFormItem :label="t('modelManager.modelKey')" label-align="left">
+          <NFormItem :label="t('modelManager.modelKey')">
             <NInput
               v-model:value="form.modelKey"
               :placeholder="t('modelManager.modelKeyPlaceholder')"
@@ -127,7 +126,7 @@
         </NGridItem>
 
         <NGridItem :span="24">
-          <NFormItem :label="t('modelManager.enabledStatus')" label-align="left">
+          <NFormItem :label="t('modelManager.enabledStatus')">
             <NCheckbox v-model:checked="form.enabled" size="medium">
               {{ t('modelManager.enableModel') }}
             </NCheckbox>
