@@ -1,6 +1,6 @@
 <template>
   <div class="provider-model-selector">
-    <!-- 提供商选择 -->
+    <!-- 供应商选择 -->
     <div class="selector-item">
       <NSelect
         v-model:value="selectedProvider"
@@ -12,7 +12,7 @@
         @update:value="handleProviderChange"
       />
     </div>
-    
+
     <!-- 模型选择 -->
     <div class="selector-item">
       <SelectWithConfig
@@ -193,5 +193,10 @@ watch(providerOptions, (options) => {
 .selector-item {
   flex: 1;
   min-width: 0;
+}
+
+.selector-item--full {
+  flex: 1;
+  width: 100%;
 }
 </style>

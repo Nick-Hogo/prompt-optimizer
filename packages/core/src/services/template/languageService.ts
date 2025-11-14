@@ -26,7 +26,7 @@ export interface ITemplateLanguageService {
  */
 export class TemplateLanguageService implements ITemplateLanguageService {
   private readonly SUPPORTED_LANGUAGES: BuiltinTemplateLanguage[] = ['zh-CN', 'en-US'];
-  private readonly DEFAULT_LANGUAGE: BuiltinTemplateLanguage = 'en-US';
+  private readonly DEFAULT_LANGUAGE: BuiltinTemplateLanguage = 'zh-CN';
 
   private currentLanguage: BuiltinTemplateLanguage = this.DEFAULT_LANGUAGE;
   private preferenceService: IPreferenceService;

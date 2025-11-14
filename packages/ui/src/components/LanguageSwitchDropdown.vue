@@ -113,9 +113,27 @@ const handleLanguageSelect = async (key: string) => {
   const selectedLanguage = availableLanguages.find(lang => lang.key === key)
   if (!selectedLanguage) return
 
-  // 切换语言
+  // 切换UI界面语言
   i18n.global.locale.value = selectedLanguage.locale
-  
+
+  // 同步切换内置模板语言（功能提示词语言）
+  // 将 zh-TW 也映射到 zh-CN，因为内置模板只支持 zh-CN 和 en-US
+  const templateLanguage = selectedLanguage.locale.startsWith('zh') ? 'zh-CN' : 'en-US'
+
+  try {
+    // 获取模板管理器服务
+    const templateManager = services.value?.templateManager
+    if (templateManager) {
+      await templateManager.changeBuiltinTemplateLanguage(templateLanguage)
+      console.log(`[LanguageSwitchDropdown] Builtin template language synced to: ${templateLanguage}`)
+    } else {
+      console.warn('[LanguageSwitchDropdown] Template manager not available, skipping builtin template language sync')
+    }
+  } catch (error) {
+    console.error('[LanguageSwitchDropdown] Failed to sync builtin template language:', error)
+    // 继续执行，不阻断UI语言切换
+  }
+
   // 保存用户偏好
   try {
     await setPreference(UI_SETTINGS_KEYS.PREFERRED_LANGUAGE, selectedLanguage.locale)

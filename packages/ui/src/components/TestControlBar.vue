@@ -14,14 +14,14 @@
         </div>
         
         <!-- 模型选择器 -->
-        <div v-if="showModelOverride" class="select-item">
+        <!-- <div v-if="showModelOverride" class="select-item">
           <NText :depth="3" style="font-size: 14px; white-space: nowrap;">
             {{ t('promptOptimizer.modelOverride') }}:
           </NText>
           <div style="min-width: 160px; max-width: 240px;">
             <slot name="model-override-select"></slot>
           </div>
-        </div>
+        </div> -->
       </div>
     </NGridItem>
 

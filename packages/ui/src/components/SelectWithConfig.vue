@@ -114,7 +114,8 @@ const renderOptionLabel = (option: { primary: string; secondary: string; raw: Se
   const title = props.selectedTooltip && secondary ? `${primary} · ${secondary}` : undefined
   return h('div', { class: 'swc-opt', title }, [
     h('div', { class: 'swc-primary' }, primary),
-    secondary ? h('div', { class: 'swc-secondary' }, secondary) : null
+    // 隐藏副标题（提供商名称）
+    // secondary ? h('div', { class: 'swc-secondary' }, secondary) : null
   ])
 }
 

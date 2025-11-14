@@ -72,7 +72,7 @@ export default {
     copy: "复制",
     content: "内容",
     focus: "聚焦",
-    noContent: "「GuDa正在等待您的问题哦~」",
+    noContent: "GuDa正在等待您的问题哦~",
     clickToEdit: "点击编辑",
     generating: "生成中...",
     generatingReasoning: "思考中...",
@@ -396,7 +396,7 @@ export default {
         uncategorized: "未分类",
         uncategorizedDesc: "默认分类",
         systemPrompt: "系统提示词",
-        systemPromptDesc: "优化后的系统提示词",
+        systemPromptDesc: "优化后的提示词",
         userPrompt: "用户提示词",
         userPromptDesc: "优化后的用户提示词",
         creativeWriting: "创意写作",
@@ -416,12 +416,12 @@ export default {
     save: "保存提示词",
     share: "分享",
     export: "导出",
-    originalPrompt: "原始提示词",
-    optimizeModel: "提供商",
-    modelOverride: "模型",
+    originalPrompt: "初始系统提示词",
+    optimizeModel: "提供平台",
+    modelOverride: "具体模型",
     modelOverridePlaceholder: "选择具体模型（可选）",
     templateLabel: "优化模板",
-    originalPromptPlaceholder: "「这里好空哦～输入点什么试试吧！」\n示例:「请帮我优化这段项目描述，让它更像一个资深产品经理写的，逻辑清晰、重点明确。」",
+    originalPromptPlaceholder: "示例:「请帮我优化这段项目描述，让它更像一个资深产品经理写的，逻辑清晰、重点明确。」",
 
     // 新增：优化模式相关
     optimizationMode: "优化模式",
@@ -430,7 +430,7 @@ export default {
     systemPromptInput: "系统提示词",
     userPromptInput: "用户提示词",
     systemPromptPlaceholder: "请输入需要优化的系统提示词...",
-    userPromptPlaceholder: "请输入需要优化的用户提示词...",
+    userPromptPlaceholder: "示例：我这周什么都没干，帮我写个周报救救！",
     systemPromptHelp:
       "系统提示词优化模式：优化用于定义AI助手角色、行为和回应风格的系统提示词",
     userPromptHelp:
@@ -1115,7 +1115,7 @@ export default {
     },
   },
   prompt: {
-    optimized: "优化后的提示词",
+    optimized: "优化后的系统提示词",
     optimizing: "优化中...",
     continueOptimize: "继续优化",
     copy: "复制",

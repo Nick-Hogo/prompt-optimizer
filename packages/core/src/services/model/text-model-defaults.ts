@@ -488,7 +488,7 @@ export function createDefaultTextModels(envVars: {
       modelMeta: claudeSonnet4Model,
       connectionConfig: {
         apiKey: '',
-        baseURL: 'http://127.0.0.1:8080/v1'
+        baseURL: 'https://cc.guda.studio/v1'
       },
       paramOverrides: {
         max_tokens: 8192
@@ -503,7 +503,7 @@ export function createDefaultTextModels(envVars: {
     //   modelMeta: gpt5Model,
     //   connectionConfig: {
     //     apiKey: '',
-    //     baseURL: 'http://127.0.0.1:8080/v1'
+    //     baseURL: 'https://cc.guda.studio/v1'
     //   },
     //   paramOverrides: {},
     //   customParamOverrides: {}
@@ -516,7 +516,7 @@ export function createDefaultTextModels(envVars: {
       modelMeta: gemini25FlashModel,
       connectionConfig: {
         apiKey: '',
-        baseURL: 'http://127.0.0.1:8080'
+        baseURL: 'https://cc.guda.studio'
       },
       paramOverrides: {},
       customParamOverrides: {}
@@ -568,7 +568,7 @@ export function createDefaultTextModels(envVars: {
       modelMeta: grok3FastModel,
       connectionConfig: {
         apiKey: '',
-        baseURL: 'http://127.0.0.1:8080/grok/v1'
+        baseURL: 'https://cc.guda.studio/grok/v1'
       },
       paramOverrides: {},
       customParamOverrides: {}
