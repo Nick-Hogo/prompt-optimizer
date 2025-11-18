@@ -413,7 +413,7 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
         borderHover: '2px solid #BBEFCD',
         borderFocus: '2px solid #A5E7BE',
         boxShadowFocus: '0 0 0 3px rgba(187, 239, 205, 0.25)',
-        caretColor: '#BBEFCD',
+        caretColor: '#5F5A50',
         suffixTextColor: '#A8A399',
         prefixTextColor: '#A8A399',
         heightMedium: '36px',
