@@ -13,6 +13,11 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 18181,
       host: true,
+      allowedHosts: [
+        'localhost',
+        '.guda.studio',
+        '.gudacc.com'
+      ],
       fs: {
         // 允许为工作区依赖提供服务
         allow: ['..']
