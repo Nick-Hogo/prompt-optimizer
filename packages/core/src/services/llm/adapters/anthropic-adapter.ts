@@ -64,7 +64,7 @@ export class AnthropicAdapter extends AbstractTextProviderAdapter {
       // Claude 4.0 系列
       {
         id: 'claude-sonnet-4-5-20250929-thinking',
-        name: 'claude-sonnet-4-5-20250929-thinking',
+        name: 'Sonnet-4.5-Thinking',
         description: 'Most powerful Claude model for complex tasks with thinking',
         providerId,
         capabilities: {
@@ -77,7 +77,7 @@ export class AnthropicAdapter extends AbstractTextProviderAdapter {
       },
       {
         id: 'claude-sonnet-4-5-20250929',
-        name: 'claude-sonnet-4-5-20250929',
+        name: 'Sonnet-4.5',
         description: 'Balanced Claude model for most tasks',
         providerId,
         capabilities: {

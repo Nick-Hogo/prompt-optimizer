@@ -719,7 +719,7 @@ export default {
     apiKey: "API密钥",
     addModel: "添加",
     addImageModel: "添加图像模型",
-    quickConfig: "更多配置",
+    quickConfig: "添加配置",
     detectingModels: "正在检测可用模型...",
     refreshModels: "刷新模型列表",
     saveSuccess: "保存成功",

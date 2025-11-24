@@ -62,6 +62,9 @@
             </NFlex>
 
             <NFlex align="center" :size="8" :wrap="true" style="flex-shrink: 0;">
+                <!-- 快速配置按钮 -->
+                <slot name="quick-config-button"></slot>
+                
                 <!-- 预览按钮 -->
                 <NButton
                     v-if="showPreview"
@@ -157,9 +160,6 @@
 
         <!-- 控制面板 - 只保留提交按钮 -->
         <NFlex justify="end" align="center" :size="12" :wrap="true">
-            <!-- 快速配置按钮 -->
-            <slot name="quick-config-button"></slot>
-            
             <!-- 提供商、模型选择器和提交按钮 -->
             <NFlex align="center" :size="12" :wrap="true">
                 <!-- 提供商和模型选择器 -->
@@ -383,6 +383,11 @@ const handleAddMissingVariable = (varName: string) => {
   display: flex;
   align-items: center;
   gap: 0;
+}
+
+.bottom-select-item .select-wrapper {
+  min-width: 180px;
+  max-width: 250px;
 }
 
 @media (max-width: 1400px) {

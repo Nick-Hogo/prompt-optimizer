@@ -109,4 +109,247 @@ export default {
 
 - **简体中文 (zh-CN)**: 默认语言，适用于中国大陆用户
 - **繁體中文 (zh-TW)**: 适用于台湾、香港等地区用户，基于简体中文翻译并适配港台用语习惯
-- **English (en-US)**: 英语，适用于国际用户 
+- **English (en-US)**: 英语，适用于国际用户
+
+## "开始优化"功能完整调用链分析
+
+### 一、UI组件层（用户点击入口）
+
+**按钮位置**: `/root/prompt-optimizer/packages/ui/src/components/InputPanel.vue:192-201`
+
+```vue
+<NButton
+    type="primary"
+    size="medium"
+    @click="$emit('submit')"
+    :loading="loading"
+    :disabled="loading || disabled || !modelValue.trim()"
+>
+    {{ loading ? loadingText : buttonText }}
+</NButton>
+```
+
+**国际化键**: `promptOptimizer.optimize` → "开始优化"（zh-CN.ts:504）
+
+### 二、事件传递链路
+
+```
+InputPanel.vue:195
+  emit('submit')
+    ↓
+ContextSystemWorkspace.vue:42
+  @submit="emit('optimize')"
+    ↓
+App.vue:~156
+  @optimize="handleOptimizePrompt"
+```
+
+### 三、核心业务逻辑
+
+#### 1. App.vue - handleOptimizePrompt()
+
+```typescript
+const handleOptimizePrompt = () => {
+    if (advancedModeEnabled.value) {
+        // 高级模式：收集上下文信息
+        const advancedContext = {
+            variables: variableManager?.variableManager.value?.resolveAllVariables() || {},
+            messages: optimizationContext.value.length > 0 ? optimizationContext.value : undefined,
+            tools: optimizationContextTools.value.length > 0 ? optimizationContextTools.value : undefined,
+        };
+        optimizer.handleOptimizePromptWithContext(advancedContext, modelOverrideValue.value);
+    } else {
+        // 基础模式
+        optimizer.handleOptimizePrompt(modelOverrideValue.value);
+    }
+};
+```
+
+#### 2. usePromptOptimizer.ts:91-197 - handleOptimizePrompt()
+
+**核心流程**:
+
+1. **验证阶段**
+   - 检查prompt是否为空
+   - 检查是否正在优化中
+   - 验证模板和模型配置
+
+2. **准备阶段**
+   ```typescript
+   state.isOptimizing = true
+   state.optimizedPrompt = ''
+   state.optimizedReasoning = ''
+   ```
+
+3. **构建请求**
+   ```typescript
+   const request: OptimizationRequest = {
+       optimizationMode: optimizationMode.value,
+       targetPrompt: state.prompt,
+       templateId: currentTemplate.id,
+       modelKey: optimizeModel.value,
+       modelOverride: modelOverride,
+       contextMode: contextMode?.value,
+       advancedContext: advancedContext  // 仅在带上下文版本中
+   }
+   ```
+
+4. **流式优化**
+   ```typescript
+   await promptService.value!.optimizePromptStream(
+       request,
+       {
+           onToken: (token: string) => {
+               state.optimizedPrompt += token
+           },
+           onReasoningToken: (reasoningToken: string) => {
+               state.optimizedReasoning += reasoningToken
+           },
+           onComplete: async () => {
+               // 创建历史记录
+               const recordData = { /* ... */ };
+               const newRecord = await historyManager.value!.createNewChain(recordData);
+               // 更新版本信息
+               state.currentChainId = newRecord.chainId;
+               state.currentVersions = newRecord.versions;
+               state.currentVersionId = newRecord.currentRecord.id;
+           },
+           onError: (error: Error) => {
+               toast.error(error.message)
+           }
+       }
+   )
+   ```
+
+#### 3. PromptService.optimizePromptStream()
+
+**位置**: `/root/prompt-optimizer/packages/core/src/services/prompt/service.ts`
+
+**核心步骤**:
+
+```typescript
+async optimizePromptStream(
+    request: OptimizationRequest,
+    callbacks: StreamHandlers,
+): Promise<void> {
+    // 1. 验证请求参数
+    this.validateOptimizationRequest(request);
+
+    // 2. 获取模型配置
+    const modelConfig = await this.modelManager.getModel(request.modelKey);
+
+    // 3. 获取优化模板
+    const template = await this.templateManager.getTemplate(request.templateId);
+
+    // 4. 创建模板上下文
+    const baseContext: TemplateContext = {
+        originalPrompt: request.targetPrompt,
+        optimizationMode: request.optimizationMode,
+        contextMode: request.contextMode,
+        renderPhase: "optimize",
+    };
+
+    // 5. 扩展上下文（变量、会话消息）
+    const context = TemplateProcessor.createExtendedContext(
+        baseContext,
+        request.advancedContext?.variables,
+        request.advancedContext?.messages,
+    );
+
+    // 6. 处理会话消息
+    if (request.advancedContext?.messages) {
+        const conversationText = TemplateProcessor.formatConversationAsText(
+            request.advancedContext.messages,
+        );
+        context.conversationContext = conversationText;
+    }
+
+    // 7. 渲染模板得到最终提示词
+    const renderedPrompt = await TemplateProcessor.render(template.content, context);
+
+    // 8. 调用LLM服务进行流式生成
+    await this.llmService.streamChat(
+        renderedPrompt,
+        modelConfig,
+        callbacks,
+        request.modelOverride
+    );
+}
+```
+
+### 四、完整调用链图示
+
+```
+用户点击"开始优化"按钮
+    ↓
+InputPanel.vue:195 → emit('submit')
+    ↓
+ContextSystemWorkspace.vue:42 → emit('optimize')
+    ↓
+App.vue:~156 → handleOptimizePrompt()
+    ↓
+    [模式判断]
+    ├─ 高级模式 → optimizer.handleOptimizePromptWithContext(advancedContext, modelOverride)
+    └─ 基础模式 → optimizer.handleOptimizePrompt(modelOverride)
+    ↓
+usePromptOptimizer.ts:91-314
+    ↓
+    1. 验证模板和模型
+    2. 清空之前结果
+    3. 构建OptimizationRequest
+    4. 调用promptService.optimizePromptStream()
+    ↓
+PromptService.optimizePromptStream()
+    ↓
+    1. 验证请求参数
+    2. 获取模型配置
+    3. 获取优化模板
+    4. 创建并扩展模板上下文
+    5. 渲染模板
+    6. 调用llmService.streamChat()
+    ↓
+LLMService.streamChat()
+    ↓
+    [流式返回结果]
+    ├─ onToken → 更新optimizedPrompt
+    ├─ onReasoningToken → 更新optimizedReasoning
+    ├─ onComplete → 创建历史记录、更新版本信息
+    └─ onError → 显示错误提示
+```
+
+### 五、关键数据流
+
+#### 输入数据
+1. **用户输入的提示词** (`optimizer.prompt`)
+2. **选择的优化模型** (`optimizeModel.value`)
+3. **选择的优化模板** (`selectedOptimizeTemplate` / `selectedUserOptimizeTemplate`)
+4. **高级上下文**（可选）:
+   - 变量值 (`variables`)
+   - 会话消息 (`messages`)
+   - 工具定义 (`tools`)
+5. **模型覆盖参数**（可选）(`modelOverride`)
+
+#### 输出数据
+1. **优化后的提示词** (`optimizedPrompt`) - 流式更新
+2. **优化推理过程** (`optimizedReasoning`) - 流式更新
+3. **历史记录** - 完成时创建
+4. **版本信息** - 完成时更新
+
+### 六、状态管理
+
+| 状态变量 | 作用 | 更新时机 |
+|---------|------|---------|
+| `isOptimizing` | 防止重复提交 | 开始时设为true,完成/错误时设为false |
+| `optimizedPrompt` | 优化结果 | 流式累积,每次onToken回调时追加 |
+| `optimizedReasoning` | 推理过程 | 流式累积,每次onReasoningToken回调时追加 |
+| `currentChainId` | 记录链ID | onComplete时更新 |
+| `currentVersions` | 版本列表 | onComplete时更新 |
+| `currentVersionId` | 当前版本ID | onComplete时更新 |
+
+### 七、错误处理机制
+
+1. **UI层**: 按钮disabled条件（无输入、正在优化）
+2. **Composable层**: 检查模板、模型是否选择
+3. **Service层**: 验证请求参数、模型配置、模板存在性
+4. **LLM层**: 通过onError回调传递错误
+5. **用户反馈**: 通过toast显示错误信息 

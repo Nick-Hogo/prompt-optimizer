@@ -513,17 +513,20 @@
                                         <template #quick-config-button>
                                             <NButton
                                                 @click="showQuickModelConfig = true"
-                                                type="primary"
-                                                size="medium"
+                                                type="tertiary"
+                                                size="small"
                                                 ghost
+                                                round
+                                                :title="$t('modelManager.quickConfig')"
                                             >
                                                 <template #icon>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
-                                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                                                        <circle cx="12" cy="12" r="3"/>
-                                                    </svg>
+                                                    <NIcon>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                                            <circle cx="12" cy="12" r="3"/>
+                                                        </svg>
+                                                    </NIcon>
                                                 </template>
-                                                {{ $t('modelManager.quickConfig') }}
                                             </NButton>
                                         </template>
                                         <template #model-select>
@@ -1015,6 +1018,7 @@ import {
     NModal,
     NScrollbar,
     NSpace,
+    NIcon,
     useMessage,
 } from "naive-ui";
 import hljs from "highlight.js/lib/core";
