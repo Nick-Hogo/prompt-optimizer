@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { darkTheme, lightTheme, type GlobalThemeOverrides, type GlobalTheme } from 'naive-ui'
 
 // 当前主题ID
-export const currentThemeId = ref<string>('macaron')
+export const currentThemeId = ref<string>('sage')
 
 // 主题类型定义
 export interface ThemeConfig {
@@ -315,6 +315,160 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     }
   },
 
+  sage: {
+    id: 'sage',
+    name: '学术模式',
+    naiveTheme: lightTheme,
+    themeOverrides: {
+      common: {
+        primaryColor: '#5A9A78',
+        primaryColorHover: '#4F8967',
+        primaryColorPressed: '#447756',
+        primaryColorSuppl: '#7DB091',
+        successColor: '#5A9A78',
+        successColorHover: '#4F8967',
+        successColorPressed: '#447756',
+        successColorSuppl: '#E8F3ED',
+        warningColor: '#C2A058',
+        warningColorHover: '#B08F4C',
+        warningColorPressed: '#9E7E40',
+        warningColorSuppl: '#F5ECD8',
+        errorColor: '#C67060',
+        errorColorHover: '#B46454',
+        errorColorPressed: '#A25848',
+        errorColorSuppl: '#F5E8E5',
+        bodyColor: '#F8F7F4',
+        cardColor: '#FFFFFF',
+        modalColor: '#FFFFFF',
+        popoverColor: '#FFFFFF',
+        tableColor: '#FAFAF9',
+        inputColor: '#FEFEFE',
+        hoverColor: 'rgba(90, 154, 120, 0.08)',
+        actionColor: '#EFF1EE',
+        textColorBase: '#3D403A',
+        textColor1: '#3D403A',
+        textColor2: '#5C5F58',
+        textColor3: '#7A7D76',
+        placeholderColor: '#9FA29B',
+        borderColor: '#D8DAD3',
+        dividerColor: '#E5E7E0',
+        scrollbarColor: 'rgba(90, 154, 120, 0.25)',
+        scrollbarColorHover: 'rgba(90, 154, 120, 0.4)',
+        closeIconColor: 'rgba(61, 64, 58, 0.5)',
+        closeIconColorHover: '#5C5F58',
+        closeIconColorPressed: '#3D403A',
+        clearColor: 'rgba(90, 154, 120, 0.2)',
+        clearColorHover: 'rgba(90, 154, 120, 0.3)',
+        clearColorPressed: 'rgba(90, 154, 120, 0.4)'
+      },
+      Button: {
+        textColorPrimary: '#FFFFFF',
+        textColorHoverPrimary: '#FFFFFF',
+        textColorPressedPrimary: '#FFFFFF',
+        textColorFocusPrimary: '#FFFFFF',
+        textColorDisabledPrimary: 'rgba(255, 255, 255, 0.6)',
+        colorPrimary: '#5A9A78',
+        colorHoverPrimary: '#4F8967',
+        colorPressedPrimary: '#447756',
+        colorFocusPrimary: '#5A9A78',
+        colorDisabledPrimary: '#B8D3C5',
+        borderPrimary: '1px solid #5A9A78',
+        borderHoverPrimary: '1px solid #4F8967',
+        borderPressedPrimary: '1px solid #447756',
+        borderFocusPrimary: '1px solid #5A9A78',
+        borderDisabledPrimary: '1px solid #B8D3C5',
+        rippleColorPrimary: 'rgba(90, 154, 120, 0.25)',
+        textColor: '#5C5F58',
+        textColorHover: '#3D403A',
+        textColorPressed: '#2A2D28',
+        color: '#EFF1EE',
+        colorHover: '#E3E6E1',
+        colorPressed: '#D8DAD3',
+        border: '1px solid #D8DAD3',
+        borderHover: '1px solid #C5C8C1',
+        borderPressed: '1px solid #B0B3AC',
+        heightMedium: '36px',
+        fontSizeMedium: '14px',
+        fontWeightStrong: '500',
+        borderRadius: '6px',
+        paddingMedium: '0 16px'
+      },
+      Input: {
+        color: '#FEFEFE',
+        colorDisabled: '#F5F5F4',
+        colorFocus: '#FFFFFF',
+        textColor: '#3D403A',
+        textColorDisabled: 'rgba(61, 64, 58, 0.45)',
+        placeholderColor: '#9FA29B',
+        placeholderColorDisabled: 'rgba(159, 162, 155, 0.6)',
+        iconColor: '#9FA29B',
+        iconColorHover: '#7A7D76',
+        iconColorPressed: '#5C5F58',
+        iconColorDisabled: 'rgba(159, 162, 155, 0.5)',
+        clearColor: 'rgba(90, 154, 120, 0.2)',
+        clearColorHover: 'rgba(90, 154, 120, 0.3)',
+        clearColorPressed: 'rgba(90, 154, 120, 0.4)',
+        border: '1px solid #D8DAD3',
+        borderDisabled: '1px solid rgba(216, 218, 211, 0.6)',
+        borderHover: '1px solid #C5C8C1',
+        borderFocus: '1px solid #5A9A78',
+        boxShadowFocus: '0 0 0 2px rgba(90, 154, 120, 0.15)',
+        caretColor: '#5A9A78',
+        suffixTextColor: '#7A7D76',
+        prefixTextColor: '#7A7D76',
+        heightMedium: '36px',
+        fontSizeMedium: '14px',
+        borderRadius: '6px',
+        paddingMedium: '0 12px',
+        lineHeight: '1.6'
+      },
+      Card: {
+        color: '#FFFFFF',
+        colorModal: '#FFFFFF',
+        colorTarget: '#FFFFFF',
+        textColor: '#3D403A',
+        titleTextColor: '#2A2D28',
+        titleFontWeight: '600',
+        borderColor: '#D8DAD3',
+        actionColor: '#EFF1EE',
+        closeIconColor: '#9FA29B',
+        closeIconColorHover: '#7A7D76',
+        closeIconColorPressed: '#5C5F58',
+        borderRadius: '8px',
+        paddingMedium: '20px',
+        boxShadow: '0 2px 8px rgba(61, 64, 58, 0.08), 0 1px 2px rgba(61, 64, 58, 0.05)'
+      },
+      Tabs: {
+        tabColor: '#EFF1EE',
+        tabColorActive: '#E3E6E1',
+        tabBorderColor: '#D8DAD3',
+        tabTextColorBar: '#7A7D76',
+        tabTextColorBarHover: '#5C5F58',
+        tabTextColorBarActive: '#3D403A',
+        tabTextColorCard: '#7A7D76',
+        tabTextColorCardActive: '#3D403A',
+        barColor: '#5A9A78'
+      },
+      Radio: {
+        buttonBorderColor: '#D8DAD3',
+        buttonBorderColorActive: '#5A9A78',
+        buttonColor: '#EFF1EE',
+        buttonColorActive: '#E8F3ED',
+        buttonTextColor: '#7A7D76',
+        buttonTextColorActive: '#3D403A'
+      },
+      Dropdown: {
+        color: '#FFFFFF',
+        optionTextColor: '#5C5F58',
+        optionTextColorHover: '#3D403A',
+        optionTextColorActive: '#3D403A',
+        optionColorHover: '#F5F6F5',
+        optionColorActive: '#E8F3ED',
+        borderColor: '#D8DAD3'
+      }
+    }
+  },
+
   macaron: {
     id: 'macaron',
     name: '马卡龙模式',
@@ -548,9 +702,9 @@ export const initializeNaiveTheme = (): void => {
     console.warn('Failed to load theme preference:', error)
   }
 
-  // 如果没有保存的主题，使用 macaron 作为默认主题
+  // 如果没有保存的主题，使用 sage 作为默认主题
   if (!savedTheme) {
-    savedTheme = 'macaron'
+    savedTheme = 'sage'
   }
 
   // 应用主题

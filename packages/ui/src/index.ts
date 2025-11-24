@@ -64,6 +64,7 @@ export { default as InputPanelUI } from "./components/InputPanel.vue";
 export { default as MainLayoutUI } from "./components/MainLayout.vue";
 export { default as ContentCardUI } from "./components/ContentCard.vue";
 export { default as ActionButtonUI } from "./components/ActionButton.vue";
+export { default as NavIcon } from "./components/NavIcon.vue";
 export { default as ThemeToggleUI } from "./components/ThemeToggleUI.vue";
 // TestPanel.vue - 已替换为TestAreaPanel
 export { default as ModalUI } from "./components/Modal.vue";

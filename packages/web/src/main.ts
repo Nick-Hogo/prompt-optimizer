@@ -16,12 +16,18 @@
  */
 
 import { createApp, watch } from 'vue'
+import { createPinia } from 'pinia'
 import { installI18nOnly, i18n } from '@prompt-optimizer/ui'
 import App from './App.vue'
 
 import '@prompt-optimizer/ui/dist/style.css'
 
 const app = createApp(App)
+
+// 安装 Pinia 状态管理
+const pinia = createPinia()
+app.use(pinia)
+
 // 只安装i18n插件，语言初始化将在App.vue中服务准备好后进行
 installI18nOnly(app)
 

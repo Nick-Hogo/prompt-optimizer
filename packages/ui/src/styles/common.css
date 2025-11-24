@@ -4,13 +4,23 @@
   border-radius: var(--po-radius-md) !important;
 }
 
-.n-button:hover {
+.n-button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: var(--po-shadow-md);
 }
 
-.n-button--primary-type:hover {
+.n-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.n-button--primary-type:hover:not(:disabled) {
   box-shadow: var(--po-shadow-lg);
+}
+
+/* ✨ P0-3: 增强焦点指示 (WCAG AA 合规) */
+.n-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 /* 增强卡片样式 */
@@ -21,16 +31,28 @@
 
 .n-card:hover {
   box-shadow: var(--po-shadow-lg) !important;
+  transform: translateY(-2px);
 }
 
 /* 增强输入框样式 */
 .n-input {
   border-radius: var(--po-radius-md) !important;
+  transition: all var(--po-transition-base) !important;
+}
+
+/* ✨ P0-3: 输入框焦点指示增强 */
+.n-input:focus-within {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
 /* 增强选择器样式 */
 .n-select {
   border-radius: var(--po-radius-md) !important;
+}
+
+/* ✨ P0-3: 选择器焦点指示 */
+.n-select:focus-within {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
 /* 自定义选择器样式 */
@@ -43,4 +65,67 @@
 
 .custom-select::-ms-expand {
   display: none;
+}
+
+/* ✨ P0-3: 全局焦点可见性改进 */
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 移除默认的 outline,只在键盘导航时显示 */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ✨ P1-1: 优化 Modal/Dialog 动画 */
+.n-modal,
+.n-drawer {
+  transition: all var(--po-transition-base) !important;
+}
+
+/* ✨ 加载骨架屏样式 */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(200, 200, 200, 0.2) 25%,
+    rgba(200, 200, 200, 0.3) 50%,
+    rgba(200, 200, 200, 0.2) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ✨ 改进代码块样式 */
+pre,
+code {
+  font-family: var(--po-font-mono);
+  border-radius: var(--po-radius-sm);
+}
+
+pre {
+  padding: var(--po-spacing-md);
+  overflow-x: auto;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+code {
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 0.9em;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
 } 

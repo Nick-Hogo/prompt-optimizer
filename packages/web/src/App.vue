@@ -55,7 +55,7 @@
                 <template #actions>
                     <!-- 核心功能区 -->
                     <ActionButtonUI
-                        icon="📝"
+                        :icon-component="TemplateIcon"
                         :text="$t('nav.templates')"
                         @click="openTemplateManager"
                         type="default"
@@ -64,7 +64,7 @@
                         :round="true"
                     />
                     <ActionButtonUI
-                        icon="📜"
+                        :icon-component="HistoryIcon"
                         :text="$t('nav.history')"
                         @click="historyManager.showHistory = true"
                         type="default"
@@ -73,7 +73,7 @@
                         :round="true"
                     />
                     <ActionButtonUI
-                        icon="⭐"
+                        :icon-component="StarIcon"
                         :text="$t('nav.favorites')"
                         @click="showFavoriteManager = true"
                         type="default"
@@ -82,7 +82,7 @@
                         :round="true"
                     />
                     <ActionButtonUI
-                        icon="💾"
+                        :icon-component="DatabaseIcon"
                         :text="$t('nav.dataManager')"
                         @click="showDataManager = true"
                         type="default"
@@ -992,8 +992,17 @@ import {
     nextTick,
     onMounted,
     type Ref,
+    h,
 } from "vue";
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import { useAppStore, useModeStore, useUiStore } from "./stores";
+import {
+    Template as TemplateIcon,
+    History as HistoryIcon,
+    Star as StarIcon,
+    Database as DatabaseIcon,
+} from '@vicons/tabler';
 import {
     NConfigProvider,
     NGlobalStyle,
@@ -1099,10 +1108,46 @@ const hljsInstance = hljs;
 const { t } = useI18n();
 const toast = useToast();
 
-// 2. 初始化应用服务
-const { services, isInitializing } = useAppInitializer();
+// 2. 使用 Pinia stores
+const appStore = useAppStore();
+const modeStore = useModeStore();
+const uiStore = useUiStore();
 
-// 3. Initialize i18n with storage when services are ready
+// 从 appStore 获取状态
+const { services, isInitializing, isReady, servicesForContextEditor, naiveTheme, themeOverrides } = storeToRefs(appStore);
+
+// 从 modeStore 获取状态
+const { 
+    functionMode, 
+    selectedOptimizationMode, 
+    contextMode, 
+    advancedModeEnabled,
+    basicSubMode,
+    proSubMode,
+    imageSubMode 
+} = storeToRefs(modeStore);
+
+// 从 uiStore 获取状态
+const {
+    showDataManager,
+    showFavoriteManager,
+    showSaveFavoriteDialog,
+    showQuickModelConfig,
+    showApiKeySetup,
+    showVariableManager,
+    showContextEditor,
+    showPreviewPanel,
+    focusVariableName,
+    contextEditorDefaultTab
+} = storeToRefs(uiStore);
+
+// 3. 初始化应用 (在组件挂载时)
+onMounted(async () => {
+    await appStore.initApp();
+    await modeStore.initModes();
+});
+
+// 4. Initialize i18n with storage when services are ready
 watch(
     services,
     async (newServices) => {
@@ -1175,23 +1220,12 @@ const handleApiKeySetupSubmit = async (data: { apiKey: string }) => {
     }
 };
 
-// 4. 向子组件提供服务
+// 5. 向子组件提供服务 (保持兼容性)
 provide("services", services);
-
-// 5. 控制主UI渲染的标志
-const isReady = computed(() => !!services.value && !isInitializing.value);
-
-// 创建 ContextEditor 使用的 services 引用
-const servicesForContextEditor = computed(() => services?.value || null);
 
 // 6. 创建所有必要的引用
 const promptService = shallowRef<IPromptService | null>(null);
-const selectedOptimizationMode = ref<OptimizationMode>("user");
-const showDataManager = ref(false);
-const showFavoriteManager = ref(false);
-const showSaveFavoriteDialog = ref(false);
-const showApiKeySetup = ref(false);
-const showQuickModelConfig = ref(false);
+// 收藏数据状态 (保留在组件中)
 const saveFavoriteData = ref<{
     content: string;
     originalContent?: string;
@@ -1214,43 +1248,15 @@ const promptPanelRef = ref<{
     refreshIterateTemplateSelect?: () => void;
 } | null>(null);
 
-// 高级模式状态
-const { functionMode, setFunctionMode } = useFunctionMode(services as any);
-
-// 三种功能模式的子模式持久化（独立存储）
-const { basicSubMode, setBasicSubMode } = useBasicSubMode(services as any);
-const { proSubMode, setProSubMode } = useProSubMode(services as any);
-const { imageSubMode, setImageSubMode } = useImageSubMode(services as any);
-
-const advancedModeEnabled = computed({
-    get: () => functionMode.value === "pro",
-    set: (val: boolean) => {
-        setFunctionMode(val ? "pro" : "basic");
-    },
-});
-
-// 处理功能模式变化
+// 处理功能模式变化 (委托给 modeStore)
 const handleModeSelect = async (mode: "basic" | "pro" | "image") => {
-    await setFunctionMode(mode);
-
-    // 恢复各功能模式独立的子模式状态
-    if (mode === "basic") {
-        const { ensureInitialized } = useBasicSubMode(services as any);
-        await ensureInitialized();
-        selectedOptimizationMode.value = basicSubMode.value as OptimizationMode;
-        // 同步 contextMode，确保测试输入框正确显示
-        contextMode.value = basicSubMode.value as import("@prompt-optimizer/core").ContextMode;
-    } else if (mode === "pro") {
-        const { ensureInitialized } = useProSubMode(services as any);
-        await ensureInitialized();
-        selectedOptimizationMode.value = proSubMode.value as OptimizationMode;
-        // 同步到 contextMode（关键！否则界面不会切换）
+    await modeStore.handleModeSelect(mode);
+    
+    // Pro模式特殊处理
+    if (mode === "pro") {
         await handleContextModeChange(
             proSubMode.value as import("@prompt-optimizer/core").ContextMode,
         );
-    } else if (mode === "image") {
-        const { ensureInitialized } = useImageSubMode(services as any);
-        await ensureInitialized();
     }
 };
 
@@ -1262,28 +1268,7 @@ const isCompareMode = ref(true);
 const responsiveLayout = useResponsiveTestLayout();
 const testModeConfig = useTestModeConfig(selectedOptimizationMode);
 
-// Naive UI 主题配置 - 使用新的主题系统
-const { naiveTheme, themeOverrides, initTheme } = useNaiveTheme();
-
-// 初始化主题系统
-if (typeof window !== "undefined") {
-    initTheme();
-}
-
-// 取消独立的高级模式偏好读写，改由 useFunctionMode 统一管理（默认 basic）
-
-// 变量管理状态
-const showVariableManager = ref(false);
-const focusVariableName = ref<string | undefined>(undefined);
-
-// 上下文模式 - 需要在模板中使用,所以提前声明
-const contextMode = ref<import("@prompt-optimizer/core").ContextMode>("system");
-
-// 上下文编辑器状态
-const showContextEditor = ref(false);
-const contextEditorDefaultTab = ref<"messages" | "variables" | "tools">(
-    "messages",
-);
+// 上下文编辑器状态 - 部分已迁移到 uiStore
 
 // 使用 composable 管理编辑器 UI 状态
 const {
@@ -1302,8 +1287,7 @@ const contextEditorState = ref({
     mode: "edit" as "edit" | "preview",
 });
 
-// 🆕 提示词预览面板状态
-const showPreviewPanel = ref(false);
+// 🆕 提示词预览面板状态 - 使用 uiStore
 
 // 变量管理器实例（必须在使用前声明）
 const variableManager = useVariableManager(services as any);
@@ -1328,17 +1312,17 @@ const promptPreview = usePromptPreview(
     renderPhase,
 );
 
-// 预览处理函数
+// 预览处理函数 - 使用 uiStore 控制显示
 const handleOpenInputPreview = () => {
     promptPreviewContent.value = optimizer.prompt || "";
     renderPhase.value = "test"; // 使用 test 模式，替换所有变量
-    showPreviewPanel.value = true;
+    uiStore.openPreviewPanel();
 };
 
 const handleOpenPromptPreview = () => {
     promptPreviewContent.value = optimizer.optimizedPrompt || "";
     renderPhase.value = "test"; // 使用 test 模式，替换所有变量
-    showPreviewPanel.value = true;
+    uiStore.openPreviewPanel();
 };
 
 // 变量管理器实例
@@ -1817,21 +1801,19 @@ const toggleAdvancedMode = async () => {
     );
 };
 
-// 打开变量管理器
+// 打开变量管理器 - 使用 uiStore
 const openVariableManager = (variableName?: string) => {
     // 强制刷新变量管理器数据
     if (variableManager?.refresh) {
         variableManager.refresh();
     }
-    // 设置要聚焦的变量名
-    focusVariableName.value = variableName;
-    showVariableManager.value = true;
+    uiStore.openVariableManager(variableName);
 };
 
-// 监听变量管理器关闭，清理聚焦变量
+// 监听变量管理器关闭，清理聚焦变量 - 使用 uiStore
 watch(showVariableManager, (newValue) => {
     if (!newValue) {
-        focusVariableName.value = undefined;
+        uiStore.closeVariableManager();
     }
 });
 
@@ -1947,21 +1929,15 @@ const openTemplateManager = (
 };
 
 // 处理优化模式变更
-// 基础模式子模式变更处理器
+// 基础模式子模式变更处理器 (委托给 modeStore)
 const handleBasicSubModeChange = async (mode: OptimizationMode) => {
-    await setBasicSubMode(
-        mode as import("@prompt-optimizer/core").BasicSubMode,
-    );
-    selectedOptimizationMode.value = mode; // 保持兼容性
-    // 同步 contextMode，确保测试输入框正确显示
-    contextMode.value = mode as import("@prompt-optimizer/core").ContextMode;
+    await modeStore.handleBasicSubModeChange(mode);
 };
 
-// 上下文模式子模式变更处理器
+// 上下文模式子模式变更处理器 (委托给 modeStore)
 const handleProSubModeChange = async (mode: OptimizationMode) => {
-    await setProSubMode(mode as import("@prompt-optimizer/core").ProSubMode);
-    selectedOptimizationMode.value = mode; // 保持兼容性
-
+    await modeStore.handleProSubModeChange(mode);
+    
     // 同步更新 contextMode，确保两者一致（避免重复调用）
     if (services.value?.contextMode.value !== mode) {
         await handleContextModeChange(
@@ -1970,20 +1946,11 @@ const handleProSubModeChange = async (mode: OptimizationMode) => {
     }
 };
 
-// 图像模式子模式变更处理器
+// 图像模式子模式变更处理器 (委托给 modeStore)
 const handleImageSubModeChange = async (
     mode: import("@prompt-optimizer/core").ImageSubMode,
 ) => {
-    await setImageSubMode(mode);
-
-    // 通知 ImageWorkspace 更新
-    if (typeof window !== "undefined") {
-        window.dispatchEvent(
-            new CustomEvent("image-submode-changed", {
-                detail: { mode },
-            }),
-        );
-    }
+    await modeStore.handleImageSubModeChange(mode);
 };
 
 // 🗑️ 废弃的统一处理器（保留兼容性）

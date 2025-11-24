@@ -14,7 +14,9 @@
   >
     <template #icon>
       <slot name="icon">
-        <span class="text-base sm:text-lg">{{ icon }}</span>
+        <!-- 支持传入图标组件或 emoji 字符串 -->
+        <component v-if="iconComponent" :is="iconComponent" :size="20" :stroke-width="1.5" />
+        <span v-else-if="icon" class="text-base sm:text-lg">{{ icon }}</span>
       </slot>
     </template>
     <span class="text-sm max-md:hidden">{{ text }}</span>
@@ -22,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 
 import { useI18n } from 'vue-i18n'
 import { NButton } from 'naive-ui'
@@ -31,6 +33,7 @@ const { t } = useI18n()
 
 interface Props {
   icon?: string
+  iconComponent?: Component
   text: string
   loading?: boolean
   loadingText?: string
