@@ -1148,7 +1148,7 @@ const {
 // 3. 初始化应用 (在组件挂载时)
 onMounted(async () => {
     await appStore.initApp();
-    await modeStore.initModes();
+    // 移除：await modeStore.initModes(); (移至 watch(services) 中确保 services 就绪后再初始化)
 });
 
 // 4. Initialize i18n with storage when services are ready
@@ -1161,6 +1161,9 @@ watch(
             // 然后初始化语言设置
             await initializeI18nWithStorage();
             console.log("[Web] i18n initialized");
+
+            // 初始化模式（需要 preferenceService）
+            await modeStore.initModes();
 
             // 检查是否有配置的 API Key
             await checkApiKeySetup(newServices);

@@ -61,8 +61,8 @@ import {
   NForm,
   NFormItem,
   NInput,
-  NSelect,
   NButton,
+  NText,
   type FormInst,
   type FormRules
 } from 'naive-ui'
