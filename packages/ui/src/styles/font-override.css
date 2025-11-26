@@ -1,0 +1,85 @@
+/* ============================================
+ * 强制字体覆盖 - 确保 Noto Serif SC 生效
+ * ============================================ */
+
+/* 最高优先级全局字体覆盖 */
+html,
+body,
+#app,
+[data-v-app] {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 覆盖所有可能的文本元素 */
+*:not(pre):not(code):not(kbd):not(samp):not(.font-mono):not(.editor-input):not(.prompt-input) {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 针对 Naive UI 的强制覆盖 */
+[class*="n-"]:not([class*="code"]):not([class*="input"]):not(pre):not(code) {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 特别针对常见的 Naive UI 组件 */
+.n-text,
+.n-button,
+.n-tag,
+.n-card,
+.n-modal,
+.n-drawer,
+.n-menu,
+.n-dropdown,
+.n-alert,
+.n-message,
+.n-notification {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 针对可能的嵌套元素 */
+.n-text *,
+.n-button *,
+.n-tag *,
+.n-card *,
+.n-modal *,
+.n-drawer * {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 确保标题使用衬线字体 */
+h1, h2, h3, h4, h5, h6,
+.n-h1, .n-h2, .n-h3, .n-h4, .n-h5, .n-h6 {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+  font-weight: 600 !important;
+}
+
+/* 段落和普通文本 */
+p, span, div, section, article,
+.n-p, .n-text {
+  font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif !important;
+}
+
+/* 保持编辑器等宽字体 */
+pre, code, kbd, samp,
+.font-mono,
+.editor-input,
+.prompt-input,
+.n-code,
+.n-input textarea,
+.n-input input[type="text"] {
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Consolas", monospace !important;
+}
+
+/* 调试样式 - 临时显示字体信息 */
+.debug-font::before {
+  content: "当前字体: Noto Serif SC";
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  z-index: 10000;
+  font-family: monospace !important;
+}

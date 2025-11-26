@@ -1083,6 +1083,9 @@ import {
     // i18n functions
     initializeI18nWithStorage,
     setI18nServices,
+    
+    // Font system
+    initializeFontSystem,
 
     // Types from UI package
     type OptimizationMode,
@@ -1148,6 +1151,8 @@ const {
 // 3. 初始化应用 (在组件挂载时)
 onMounted(async () => {
     await appStore.initApp();
+    // 初始化字体系统
+    initializeFontSystem();
     // 移除：await modeStore.initModes(); (移至 watch(services) 中确保 services 就绪后再初始化)
 });
 

@@ -1,0 +1,238 @@
+/* ============================================
+ * 字体系统 - 最佳实践方案（中文优化版）
+ * ============================================ */
+
+/* 字体加载 - 使用 Google Fonts CDN */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
+/* 字体预加载和回退处理 */
+@font-face {
+  font-family: 'Noto Serif SC Fallback';
+  src: local('Noto Serif SC'), local('SimSun'), local('宋体');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans SC Fallback';
+  src: local('Noto Sans SC'), local('Microsoft YaHei'), local('微软雅黑');
+  font-display: swap;
+}
+
+/* 字体变量定义 */
+:root {
+  /* ==================== 
+   * 界面字体 - 默认使用国风楷书
+   * 特别优化中文显示
+   * ==================== */
+  --po-font-ui: "Ma Shan Zheng", "KaiTi", "STKaiti", serif;
+  
+  /* ==================== 
+   * 编辑器字体 - 等宽字体，支持连字
+   * 优先使用 JetBrains Mono
+   * ==================== */
+  --po-font-editor: "JetBrains Mono", "Fira Code", "SF Mono", 
+                    "Menlo", "Consolas", "Liberation Mono", 
+                    "Courier New", monospace;
+  
+  /* ==================== 
+   * 代码展示字体 - 与编辑器相同
+   * ==================== */
+  --po-font-code: var(--po-font-editor);
+  
+  /* ==================== 
+   * 中文优先字体 - 专门针对中文内容优化（国风楷书）
+   * ==================== */
+  --po-font-zh: "Ma Shan Zheng", "KaiTi", "STKaiti", serif;
+  
+  /* ==================== 
+   * 数字字体 - 等宽数字，便于对比
+   * ==================== */
+  --po-font-number: "JetBrains Mono", "SF Mono", "Consolas", monospace;
+  
+  /* ==================== 
+   * 标题字体 - 使用界面字体但更紧凑
+   * ==================== */
+  --po-font-heading: var(--po-font-ui);
+  
+  /* ==================== 
+   * 字重定义
+   * ==================== */
+  --po-font-weight-light: 300;
+  --po-font-weight-normal: 400;
+  --po-font-weight-medium: 500;
+  --po-font-weight-semibold: 600;
+  --po-font-weight-bold: 700;
+  
+  /* ==================== 
+   * 字号定义
+   * ==================== */
+  --po-font-size-xs: 12px;
+  --po-font-size-sm: 13px;
+  --po-font-size-base: 14px;
+  --po-font-size-md: 15px;
+  --po-font-size-lg: 16px;
+  --po-font-size-xl: 18px;
+  --po-font-size-2xl: 20px;
+  --po-font-size-3xl: 24px;
+  
+  /* ==================== 
+   * 行高定义
+   * ==================== */
+  --po-line-height-tight: 1.25;
+  --po-line-height-normal: 1.5;
+  --po-line-height-relaxed: 1.75;
+  
+  /* ==================== 
+   * 字间距定义
+   * ==================== */
+  --po-letter-spacing-tight: -0.02em;
+  --po-letter-spacing-normal: 0;
+  --po-letter-spacing-wide: 0.02em;
+}
+
+/* ============================================
+ * 全局字体应用
+ * ============================================ */
+
+body {
+  font-family: var(--po-font-ui);
+  font-size: var(--po-font-size-base);
+  line-height: var(--po-line-height-normal);
+  font-weight: var(--po-font-weight-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 标题字体优化 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--po-font-heading);
+  font-weight: var(--po-font-weight-semibold);
+  letter-spacing: var(--po-letter-spacing-tight);
+  line-height: var(--po-line-height-tight);
+}
+
+h1 { font-size: var(--po-font-size-3xl); }
+h2 { font-size: var(--po-font-size-2xl); }
+h3 { font-size: var(--po-font-size-xl); }
+h4 { font-size: var(--po-font-size-lg); }
+h5 { font-size: var(--po-font-size-md); }
+h6 { font-size: var(--po-font-size-base); }
+
+/* 代码和预格式化文本 */
+pre,
+code,
+kbd,
+samp {
+  font-family: var(--po-font-code);
+  font-size: var(--po-font-size-sm);
+}
+
+/* 编程连字支持 (Ligatures) */
+pre,
+code {
+  font-feature-settings: "liga" 1, "calt" 1;
+  font-variant-ligatures: contextual;
+  -webkit-font-feature-settings: "liga" 1, "calt" 1;
+  -moz-font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* ============================================
+ * 中文字体优化
+ * ============================================ */
+
+/* 中文标点符号优化 */
+:lang(zh),
+:lang(zh-CN),
+:lang(zh-TW) {
+  font-family: var(--po-font-zh);
+  /* 禁用连字以避免中文显示问题 */
+  font-feature-settings: "liga" 0;
+  font-variant-ligatures: no-common-ligatures;
+}
+
+/* 中英文混排优化 - 自动添加间距 */
+.text-mixed-lang {
+  word-spacing: 0.05em;
+  letter-spacing: 0.01em;
+}
+
+/* 强制中文字体 */
+.font-zh {
+  font-family: var(--po-font-zh) !important;
+}
+
+/* 强制英文字体 */
+.font-en {
+  font-family: var(--po-font-ui) !important;
+}
+
+/* ============================================
+ * 功能性字体类
+ * ============================================ */
+
+/* 等宽字体类 */
+.font-mono {
+  font-family: var(--po-font-code) !important;
+}
+
+/* 数字字体类 */
+.font-number {
+  font-family: var(--po-font-number) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* 编辑器字体类 */
+.font-editor {
+  font-family: var(--po-font-editor) !important;
+  font-size: var(--po-font-size-base);
+  line-height: var(--po-line-height-relaxed);
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* ============================================
+ * 字重工具类
+ * ============================================ */
+
+.font-light { font-weight: var(--po-font-weight-light); }
+.font-normal { font-weight: var(--po-font-weight-normal); }
+.font-medium { font-weight: var(--po-font-weight-medium); }
+.font-semibold { font-weight: var(--po-font-weight-semibold); }
+.font-bold { font-weight: var(--po-font-weight-bold); }
+
+/* ============================================
+ * 行高工具类
+ * ============================================ */
+
+.leading-tight { line-height: var(--po-line-height-tight); }
+.leading-normal { line-height: var(--po-line-height-normal); }
+.leading-relaxed { line-height: var(--po-line-height-relaxed); }
+
+/* ============================================
+ * 特殊场景优化
+ * ============================================ */
+
+/* 输入框和文本域使用等宽字体（可选） */
+.input-monospace input,
+.input-monospace textarea {
+  font-family: var(--po-font-editor) !important;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* 代码块滚动优化 */
+pre {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+}
+
+/* 性能优化 - 减少字体闪烁 */
+@supports (font-variation-settings: normal) {
+  * {
+    font-variation-settings: normal;
+  }
+}

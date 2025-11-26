@@ -3,6 +3,10 @@ import { computed, ref } from 'vue'
 
 import { darkTheme, lightTheme, type GlobalThemeOverrides, type GlobalTheme } from 'naive-ui'
 
+// 字体配置常量
+const FONT_FAMILY_UI = '"Ma Shan Zheng", "KaiTi", "STKaiti", serif'
+const FONT_FAMILY_MONO = '"JetBrains Mono", "Fira Code", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace'
+
 // 当前主题ID
 export const currentThemeId = ref<string>('light')
 
@@ -22,6 +26,10 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     naiveTheme: lightTheme,
     themeOverrides: {
       common: {
+        fontFamily: FONT_FAMILY_UI,
+        fontFamilyMono: FONT_FAMILY_MONO,
+        fontSize: '14px',
+        fontWeightStrong: '600',
         primaryColor: '#5A9A78',
         primaryColorHover: '#4F8967',
         primaryColorPressed: '#447756',
@@ -176,6 +184,10 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     naiveTheme: darkTheme,
     themeOverrides: {
       common: {
+        fontFamily: FONT_FAMILY_UI,
+        fontFamilyMono: FONT_FAMILY_MONO,
+        fontSize: '14px',
+        fontWeightStrong: '600',
         primaryColor: '#64748b',
         primaryColorHover: '#475569',
         primaryColorPressed: '#334155',
@@ -198,6 +210,10 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     naiveTheme: lightTheme,
     themeOverrides: {
       common: {
+        fontFamily: FONT_FAMILY_UI,
+        fontFamilyMono: FONT_FAMILY_MONO,
+        fontSize: '14px',
+        fontWeightStrong: '600',
         primaryColor: '#1f6bd1',
         primaryColorHover: '#185cb8',
         primaryColorPressed: '#134c98',
@@ -328,6 +344,10 @@ export const naiveThemeConfigs: Record<string, ThemeConfig> = {
     naiveTheme: lightTheme,
     themeOverrides: {
       common: {
+        fontFamily: FONT_FAMILY_UI,
+        fontFamilyMono: FONT_FAMILY_MONO,
+        fontSize: '14px',
+        fontWeightStrong: '600',
         primaryColor: '#BBEFCD',
         primaryColorHover: '#A5E7BE',
         primaryColorPressed: '#8FDFAE',

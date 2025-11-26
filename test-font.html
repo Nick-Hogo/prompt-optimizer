@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字体测试</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+        
+        .test-noto-serif {
+            font-family: "Noto Serif SC", serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+        
+        .test-system {
+            font-family: system-ui, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+        
+        .debug-info {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>字体测试页面</h1>
+    
+    <div class="debug-info">
+        <p>当前测试的字体：Noto Serif SC</p>
+        <p>测试时间：<span id="time"></span></p>
+    </div>
+    
+    <h2>Noto Serif SC 字体测试：</h2>
+    <div class="test-noto-serif">
+        <p>这是使用 Noto Serif SC 字体显示的中文文本。原始提示词结果应该能看到明显的衬线效果。</p>
+        <p>English text: The quick brown fox jumps over the lazy dog.</p>
+        <p>数字测试：1234567890</p>
+        <p>标点符号：，。；：？！（）【】《》""''</p>
+    </div>
+    
+    <h2>系统字体对比：</h2>
+    <div class="test-system">
+        <p>这是使用系统默认字体显示的中文文本。原始提示词结果应该看起来更现代。</p>
+        <p>English text: The quick brown fox jumps over the lazy dog.</p>
+        <p>数字测试：1234567890</p>
+        <p>标点符号：，。；：？！（）【】《》""''</p>
+    </div>
+
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+        
+        // 检查字体是否加载成功
+        document.fonts.ready.then(function() {
+            console.log('所有字体已加载完成');
+            
+            // 检查 Noto Serif SC 是否可用
+            if (document.fonts.check('16px "Noto Serif SC"')) {
+                console.log('✅ Noto Serif SC 字体可用');
+            } else {
+                console.log('❌ Noto Serif SC 字体不可用');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+/* ============================================
+ * 组件级字体应用
+ * ============================================ */
+
+/* ==================== 
+ * 输入框和文本域 - 编辑器字体
+ * ==================== */
+
+/* Naive UI Input 组件 - 提示词编辑区域使用等宽字体 */
+.n-input.font-editor .n-input__textarea-el,
+.n-input.font-editor .n-input__input-el {
+  font-family: var(--po-font-editor) !important;
+  font-size: var(--po-font-size-base) !important;
+  line-height: var(--po-line-height-relaxed) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* 专门的提示词输入区域 */
+.prompt-input .n-input__textarea-el,
+.prompt-textarea .n-input__textarea-el,
+.editor-input .n-input__textarea-el,
+.editor-input .n-input__input-el {
+  font-family: var(--po-font-editor) !important;
+  font-size: var(--po-font-size-base) !important;
+  line-height: var(--po-line-height-relaxed) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* ==================== 
+ * 代码显示区域
+ * ==================== */
+
+/* Markdown 渲染器中的代码块 */
+.markdown-renderer pre,
+.markdown-renderer code,
+.output-display pre,
+.output-display code {
+  font-family: var(--po-font-code) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* Naive UI Code 组件 */
+.n-code {
+  font-family: var(--po-font-code) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* ==================== 
+ * 变量和模板编辑器
+ * ==================== */
+
+.variable-editor .n-input__textarea-el,
+.template-editor .n-input__textarea-el {
+  font-family: var(--po-font-editor) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* ==================== 
+ * 上下文编辑器
+ * ==================== */
+
+.context-editor .n-input__textarea-el,
+.context-message-input .n-input__textarea-el,
+.conversation-input .n-input__textarea-el {
+  font-family: var(--po-font-editor) !important;
+  line-height: var(--po-line-height-relaxed) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* ==================== 
+ * JSON 编辑器和结构化数据显示
+ * ==================== */
+
+.json-editor,
+.json-display,
+.tool-parameters,
+.advanced-params {
+  font-family: var(--po-font-code) !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+}
+
+/* ==================== 
+ * 数字显示优化
+ * ==================== */
+
+.stat-number,
+.token-count,
+.char-count,
+.version-number,
+.model-param-value {
+  font-family: var(--po-font-number) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-feature-settings: "tnum" 1 !important;
+}
+
+/* ==================== 
+ * UI 界面元素 - 确保使用 UI 字体
+ * ==================== */
+
+.n-button,
+.n-tag,
+.n-badge,
+.n-alert,
+.n-card-header,
+.n-menu,
+.n-dropdown,
+.n-select,
+.n-radio,
+.n-checkbox {
+  font-family: var(--po-font-ui) !important;
+}
+
+/* ==================== 
+ * 标题和文本 - 强制覆盖 Naive UI
+ * ==================== */
+
+.n-text,
+.n-p,
+.n-h1,
+.n-h2,
+.n-h3,
+.n-h4,
+.n-h5,
+.n-h6 {
+  font-family: var(--po-font-ui) !important;
+}
+
+/* 强制覆盖所有 Naive UI 文本元素 */
+.n-card .n-card-header,
+.n-card .n-card__content,
+.n-card .n-text,
+.n-button .n-button__content,
+.n-tag .n-tag__content,
+.n-modal .n-card-header,
+.n-modal .n-card__content,
+.n-drawer .n-drawer-body,
+.n-layout .n-layout-content,
+.n-space .n-text,
+.n-flex .n-text {
+  font-family: var(--po-font-ui) !important;
+}
+
+/* 全局强制字体应用 */
+* {
+  font-family: var(--po-font-ui) !important;
+}
+
+/* 代码元素例外 */
+pre *, 
+code *, 
+.font-mono *,
+.editor-input *,
+.prompt-input * {
+  font-family: var(--po-font-code) !important;
+}
+
+/* ==================== 
+ * 特殊场景：保持等宽对齐
+ * ==================== */
+
+/* 日志显示 */
+.log-viewer,
+.console-output,
+.debug-panel {
+  font-family: var(--po-font-code) !important;
+  font-feature-settings: "liga" 0 !important; /* 日志不需要连字 */
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 差异对比 */
+.diff-viewer,
+.text-diff pre,
+.text-diff code {
+  font-family: var(--po-font-code) !important;
+  font-feature-settings: "liga" 0 !important;
+}
+
+/* ==================== 
+ * 中文内容优化
+ * ==================== */
+
+/* 帮助文档和说明文本 */
+.help-text,
+.description-text,
+.tooltip-content {
+  font-family: var(--po-font-zh) !important;
+  line-height: var(--po-line-height-relaxed) !important;
+}
+
+/* 中文标题 */
+.page-title,
+.section-title,
+.card-title {
+  font-family: var(--po-font-zh) !important;
+  font-weight: var(--po-font-weight-semibold) !important;
+}
+
+/* ==================== 
+ * 响应式字体大小调整
+ * ==================== */
+
+@media (max-width: 768px) {
+  .prompt-input .n-input__textarea-el,
+  .editor-input .n-input__textarea-el {
+    font-size: var(--po-font-size-sm) !important;
+  }
+  
+  body {
+    font-size: var(--po-font-size-sm) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .prompt-input .n-input__textarea-el,
+  .editor-input .n-input__textarea-el {
+    font-size: var(--po-font-size-xs) !important;
+  }
+}
+
+/* ==================== 
+ * 打印样式优化
+ * ==================== */
+
+@media print {
+  * {
+    font-family: var(--po-font-ui) !important;
+  }
+  
+  pre,
+  code {
+    font-family: var(--po-font-code) !important;
+    font-feature-settings: "liga" 0 !important; /* 打印时不使用连字 */
+  }
+}
+
+/* ==================== 
+ * 高对比度模式
+ * ==================== */
+
+@media (prefers-contrast: high) {
+  body {
+    font-weight: var(--po-font-weight-medium) !important;
+  }
+  
+  .n-input__textarea-el,
+  .n-input__input-el {
+    font-weight: var(--po-font-weight-medium) !important;
+  }
+}

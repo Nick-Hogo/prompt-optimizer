@@ -41,6 +41,20 @@ export {
   initializeNaiveTheme,
 } from "./config/naive-theme";
 
+// 导出字体配置
+export {
+  fontConfigs,
+  currentFontId,
+  currentFontConfig,
+  fontCSSVariables,
+  switchFont,
+  getCurrentFontId,
+  getFontConfig,
+  initializeFontSystem,
+  availableFonts,
+  type FontConfig
+} from "./config/font-manager";
+
 // 导出主题相关 Composables
 export { useNaiveTheme } from "./composables/ui/useNaiveTheme";
 
@@ -66,6 +80,7 @@ export { default as ContentCardUI } from "./components/ContentCard.vue";
 export { default as ActionButtonUI } from "./components/ActionButton.vue";
 export { default as NavIcon } from "./components/NavIcon.vue";
 export { default as ThemeToggleUI } from "./components/ThemeToggleUI.vue";
+export { default as FontSwitcher } from "./components/FontSwitcher.vue";
 // TestPanel.vue - 已替换为TestAreaPanel
 export { default as ModalUI } from "./components/Modal.vue";
 export { default as PanelUI } from "./components/Panel.vue";

@@ -1,3 +1,8 @@
+/* 导入字体系统 - 必须在所有其他语句之前 */
+@import './fonts.css';
+@import './component-fonts.css';
+@import './font-override.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

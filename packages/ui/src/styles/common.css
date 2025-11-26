@@ -109,7 +109,7 @@
 /* ✨ 改进代码块样式 */
 pre,
 code {
-  font-family: var(--po-font-mono);
+  font-family: var(--po-font-code);
   border-radius: var(--po-radius-sm);
 }
 
