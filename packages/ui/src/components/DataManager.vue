@@ -26,7 +26,7 @@
           block
         >
           <template #icon>
-            <span>📥</span>
+            <NIcon><Download /></NIcon>
           </template>
           {{ isExporting ? $t('common.exporting') : $t('dataManager.export.button') }}
         </NButton>
@@ -89,7 +89,7 @@
           style="margin-top: 16px;"
         >
           <template #icon>
-            <span>📤</span>
+            <NIcon><Upload /></NIcon>
           </template>
           {{ isImporting ? $t('common.importing') : $t('dataManager.import.button') }}
         </NButton>
@@ -114,11 +114,11 @@
             block
           >
             <template #icon>
-              <span>💾</span>
+              <NIcon><FileExport /></NIcon>
             </template>
             {{ isContextExporting ? $t('common.exporting') : $t('dataManager.contexts.exportFile') }}
           </NButton>
-          
+
           <NButton
             @click="handleContextExportToClipboard"
             :disabled="isContextExporting"
@@ -127,7 +127,7 @@
             block
           >
             <template #icon>
-              <span>📋</span>
+              <NIcon><Clipboard /></NIcon>
             </template>
             {{ isContextExporting ? $t('common.exporting') : $t('dataManager.contexts.exportClipboard') }}
           </NButton>
@@ -149,12 +149,12 @@
               block
             >
               <template #icon>
-                <span>📁</span>
+                <NIcon><Folder /></NIcon>
               </template>
               {{ (isContextImporting && isContextImportingFromFile) ? $t('common.importing') : $t('dataManager.contexts.importFile') }}
             </NButton>
           </NUpload>
-          
+
           <!-- 剪贴板导入 -->
           <NButton
             @click="handleContextImportFromClipboard"
@@ -164,7 +164,7 @@
             block
           >
             <template #icon>
-              <span>📝</span>
+              <NIcon><ClipboardCheck /></NIcon>
             </template>
             {{ (isContextImporting && !isContextImportingFromFile) ? $t('common.importing') : $t('dataManager.contexts.importClipboard') }}
           </NButton>
@@ -183,10 +183,18 @@
 import { ref, computed, inject, onMounted, onUnmounted, type Ref } from 'vue'
 
 import { useI18n } from 'vue-i18n'
-import { 
-  NModal, NSpace, NText, NButton, NUpload, NUploadDragger, 
-  NIcon, NAlert, type UploadFileInfo 
+import {
+  NModal, NSpace, NText, NButton, NUpload, NUploadDragger,
+  NIcon, NAlert, type UploadFileInfo
 } from 'naive-ui'
+import {
+  Download,
+  Upload,
+  FileExport,
+  Clipboard,
+  Folder,
+  ClipboardCheck
+} from '@vicons/tabler'
 import { useToast } from '../composables/ui/useToast'
 import type { AppServices } from '../types/services'
 

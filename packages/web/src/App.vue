@@ -1004,7 +1004,7 @@ import {
     Template as TemplateIcon,
     History as HistoryIcon,
     Star as StarIcon,
-    Database as DatabaseIcon,
+    DatabaseExport as DatabaseIcon,
 } from '@vicons/tabler';
 import {
     NConfigProvider,
