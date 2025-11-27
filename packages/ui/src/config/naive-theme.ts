@@ -8,7 +8,7 @@ const FONT_FAMILY_UI = '"Ma Shan Zheng", "KaiTi", "STKaiti", serif'
 const FONT_FAMILY_MONO = '"JetBrains Mono", "Fira Code", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace'
 
 // 当前主题ID
-export const currentThemeId = ref<string>('light')
+export const currentThemeId = ref<string>('dark')
 
 // 主题类型定义
 export interface ThemeConfig {
@@ -580,7 +580,7 @@ export const initializeNaiveTheme = (): void => {
     if (savedTheme) {
       console.warn(`Saved theme '${savedTheme}' not found, falling back to 'light'`)
     }
-    savedTheme = 'light'
+    savedTheme = 'dark'
   }
 
   // 应用主题
