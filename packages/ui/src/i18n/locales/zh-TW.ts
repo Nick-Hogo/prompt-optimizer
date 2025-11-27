@@ -117,6 +117,8 @@ export default {
     basicMode: "基礎",
     contextMode: "情境",
     imageMode: "圖像",
+    theme: "主題",
+    language: "語言",
   },
   contextMode: {
     user: {

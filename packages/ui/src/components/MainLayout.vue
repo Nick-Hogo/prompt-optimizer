@@ -13,23 +13,18 @@
         <NFlex justify="space-between" align="center" class="w-full nav-content" :wrap="false" :size="[16, 12]">
           <!-- 左侧：Logo + 标题 + 核心导航 -->
           <NFlex align="center" :size="16" :wrap="false">
-            <!-- Logo + 标题 -->
-            <NFlex align="center" :size="8" :wrap="false">
-              <NImage
-                :src="logoSrc"
-                alt="Logo"
-                :width="logoSize"
-                :height="logoSize"
-                object-fit="cover"
-                class="logo-image"
-                :show-toolbar="false"
-                :preview-disabled="true"
-                :fallback-src="fallbackLogoSrc"
-              />
-              <NText class="text-lg sm:text-xl font-bold theme-title" tag="h2">
-                <slot name="title">{{ t('common.appName') }}</slot>
-              </NText>
-            </NFlex>
+            <!-- Logo -->
+            <NImage
+              :src="logoSrc"
+              alt="Logo"
+              :width="logoSize"
+              :height="logoSize"
+              object-fit="cover"
+              class="logo-image"
+              :show-toolbar="false"
+              :preview-disabled="true"
+              :fallback-src="fallbackLogoSrc"
+            />
 
             <!-- 核心导航元素 -->
             <div class="core-navigation">
@@ -65,12 +60,9 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 
-import { useI18n } from 'vue-i18n'
-import { NLayout, NLayoutHeader, NLayoutContent, NFlex, NImage, NText } from 'naive-ui'
+import { NLayout, NLayoutHeader, NLayoutContent, NFlex, NImage } from 'naive-ui'
 import { ToastUI } from '../index'
 import logoImage from '../assets/guda-logo.png'
-
-const { t } = useI18n()
 
 // Logo图片配置
 const logoSrc = logoImage
@@ -219,6 +211,11 @@ const logoSize = computed(() => {
 @media (max-width: 639px) {
   .logo-image {
     border-radius: 4px;
+  }
+
+  /* 移动端隐藏标题文字 */
+  .title-hide-on-mobile {
+    display: none !important;
   }
 
   .core-navigation {

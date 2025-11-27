@@ -35,11 +35,11 @@
                     :model-label="t('promptOptimizer.optimizeModel')"
                     :template-label="t('promptOptimizer.templateLabel')"
                     :button-text="t('promptOptimizer.optimize')"
-                    :loading-text="t('common.loading')"
+                    :loading-text="t('button.stopOptimization')"
                     :loading="isOptimizing"
-                    :disabled="isOptimizing"
                     :show-preview="true"
                     @submit="emit('optimize')"
+                    @stop="emit('stop-optimization')"
                     @configModel="emit('config-model')"
                     @open-preview="emit('open-input-preview')"
                 >
@@ -294,6 +294,7 @@ const emit = defineEmits<{
 
     // 操作事件
     optimize: [];
+    "stop-optimization": [];  // 🆕 停止优化事件
     iterate: [payload: IteratePayload];
     test: [testVariables: Record<string, string>]; // 🆕 传递测试变量
     "compare-toggle": [];

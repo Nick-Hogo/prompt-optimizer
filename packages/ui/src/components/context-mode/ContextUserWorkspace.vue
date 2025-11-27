@@ -34,11 +34,11 @@
                     :model-label="t('promptOptimizer.optimizeModel')"
                     :template-label="t('promptOptimizer.templateLabel')"
                     :button-text="t('promptOptimizer.optimize')"
-                    :loading-text="t('common.loading')"
+                    :loading-text="t('button.stopOptimization')"
                     :loading="isOptimizing"
-                    :disabled="isOptimizing"
                     :show-preview="true"
                     @submit="emit('optimize')"
+                    @stop="emit('stop-optimization')"
                     @configModel="emit('config-model')"
                     @open-preview="emit('open-input-preview')"
                     :enable-variable-extraction="true"
@@ -345,6 +345,8 @@ const emit = defineEmits<{
     // --- 操作事件 ---
     /** 执行优化 */
     optimize: [];
+    /** 🆕 停止优化 */
+    "stop-optimization": [];
     /** 执行迭代优化 */
     iterate: [payload: IteratePayload];
     /** 执行测试 (传递测试变量) */

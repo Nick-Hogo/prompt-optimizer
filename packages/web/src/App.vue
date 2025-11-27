@@ -20,7 +20,7 @@
 
                 <!-- Core Navigation Slot -->
                 <template #core-nav>
-                    <NSpace :size="12" align="center">
+                    <NSpace :size="responsiveLayout.isMobile.value ? 4 : 12" align="center" :wrap="responsiveLayout.isMobile.value">
                         <!-- 功能模式选择器 -->
                         <FunctionModeSelector
                             :modelValue="functionMode"
@@ -53,48 +53,118 @@
 
                 <!-- Actions Slot -->
                 <template #actions>
-                    <!-- 核心功能区 -->
-                    <ActionButtonUI
-                        :icon-component="TemplateIcon"
-                        :text="$t('nav.templates')"
-                        @click="openTemplateManager"
-                        type="default"
-                        size="medium"
-                        :ghost="false"
-                        :round="true"
-                    />
-                    <ActionButtonUI
-                        :icon-component="HistoryIcon"
-                        :text="$t('nav.history')"
-                        @click="historyManager.showHistory = true"
-                        type="default"
-                        size="medium"
-                        :ghost="false"
-                        :round="true"
-                    />
-                    <ActionButtonUI
-                        :icon-component="StarIcon"
-                        :text="$t('nav.favorites')"
-                        @click="showFavoriteManager = true"
-                        type="default"
-                        size="medium"
-                        :ghost="false"
-                        :round="true"
-                    />
-                    <ActionButtonUI
-                        :icon-component="DatabaseIcon"
-                        :text="$t('nav.dataManager')"
-                        @click="showDataManager = true"
-                        type="default"
-                        size="medium"
-                        :ghost="false"
-                        :round="true"
-                    />
-                    <!-- 辅助功能区 - 使用简化样式降低视觉权重 -->
-                    <ThemeToggleUI />
-                    <LanguageSwitchDropdown />
-                    <!-- 自动更新组件 - 仅在Electron环境中显示 -->
-                    <UpdaterIcon />
+                    <!-- 桌面端：完整显示所有按钮 -->
+                    <template v-if="!responsiveLayout.isMobile.value">
+                        <!-- 核心功能区 -->
+                        <ActionButtonUI
+                            :icon-component="TemplateIcon"
+                            :text="$t('nav.templates')"
+                            @click="openTemplateManager"
+                            type="default"
+                            size="medium"
+                            :ghost="false"
+                            :round="true"
+                        />
+                        <ActionButtonUI
+                            :icon-component="HistoryIcon"
+                            :text="$t('nav.history')"
+                            @click="historyManager.showHistory = true"
+                            type="default"
+                            size="medium"
+                            :ghost="false"
+                            :round="true"
+                        />
+                        <ActionButtonUI
+                            :icon-component="StarIcon"
+                            :text="$t('nav.favorites')"
+                            @click="showFavoriteManager = true"
+                            type="default"
+                            size="medium"
+                            :ghost="false"
+                            :round="true"
+                        />
+                        <ActionButtonUI
+                            :icon-component="DatabaseIcon"
+                            :text="$t('nav.dataManager')"
+                            @click="showDataManager = true"
+                            type="default"
+                            size="medium"
+                            :ghost="false"
+                            :round="true"
+                        />
+                        <!-- 辅助功能区 - 使用简化样式降低视觉权重 -->
+                        <ThemeToggleUI />
+                        <LanguageSwitchDropdown />
+                    </template>
+                    
+                    <!-- 移动端：折叠菜单 -->
+                    <NPopover v-else trigger="click" placement="bottom-end" :show-arrow="false" style="max-width: 280px;" v-model:show="showMobileMenu">
+                        <template #trigger>
+                            <NButton quaternary circle size="medium">
+                                <template #icon>
+                                    <NIcon :size="24">
+                                        <MenuIcon />
+                                    </NIcon>
+                                </template>
+                            </NButton>
+                        </template>
+                        
+                        <!-- 移动端菜单内容 -->
+                        <NFlex vertical :size="4" style="min-width: 180px; padding: 4px;">
+                            <NButton
+                                text
+                                @click="handleMobileMenuClick(openTemplateManager)"
+                                style="justify-content: flex-start; padding: 8px 12px;"
+                            >
+                                <template #icon>
+                                    <NIcon :component="TemplateIcon" :size="18" />
+                                </template>
+                                {{ $t('nav.templates') }}
+                            </NButton>
+                            <NButton
+                                text
+                                @click="handleMobileMenuClick(() => historyManager.showHistory = true)"
+                                style="justify-content: flex-start; padding: 8px 12px;"
+                            >
+                                <template #icon>
+                                    <NIcon :component="HistoryIcon" :size="18" />
+                                </template>
+                                {{ $t('nav.history') }}
+                            </NButton>
+                            <NButton
+                                text
+                                @click="handleMobileMenuClick(() => showFavoriteManager = true)"
+                                style="justify-content: flex-start; padding: 8px 12px;"
+                            >
+                                <template #icon>
+                                    <NIcon :component="StarIcon" :size="18" />
+                                </template>
+                                {{ $t('nav.favorites') }}
+                            </NButton>
+                            <NButton
+                                text
+                                @click="handleMobileMenuClick(() => showDataManager = true)"
+                                style="justify-content: flex-start; padding: 8px 12px;"
+                            >
+                                <template #icon>
+                                    <NIcon :component="DatabaseIcon" :size="18" />
+                                </template>
+                                {{ $t('nav.dataManager') }}
+                            </NButton>
+                            
+                            <div style="height: 1px; background-color: var(--n-divider-color); margin: 8px 0; opacity: 0.5;"></div>
+                            
+                            <NFlex justify="space-between" align="center" style="padding: 8px 12px;">
+                                <NText :depth="3" style="font-size: 14px;">{{ $t('nav.theme') || '主题' }}</NText>
+                                <ThemeToggleUI />
+                            </NFlex>
+                            
+                            <NFlex justify="space-between" align="center" style="padding: 8px 12px;">
+                                <NText :depth="3" style="font-size: 14px;">{{ $t('nav.language') || '语言' }}</NText>
+                                <LanguageSwitchDropdown />
+                            </NFlex>
+                        </NFlex>
+                    </NPopover>
                 </template>
                 <template #main>
                     <!-- 上下文模式：根据模式使用不同的独立组件 -->
@@ -163,6 +233,7 @@
                                 responsiveLayout.isMobile.value
                             "
                             @optimize="handleOptimizePrompt"
+                            @stop-optimization="promptOptimizer.stopOptimization"
                             @iterate="handleIteratePrompt"
                             @test="handleTestAreaTest"
                             @compare-toggle="handleTestAreaCompareToggle"
@@ -329,6 +400,7 @@
                                 responsiveLayout.isMobile.value
                             "
                             @optimize="handleOptimizePrompt"
+                            @stop-optimization="promptOptimizer.stopOptimization"
                             @iterate="handleIteratePrompt"
                             @test="handleTestAreaTest"
                             @compare-toggle="handleTestAreaCompareToggle"
@@ -455,19 +527,22 @@
                             justify="space-between"
                             :style="{
                                 display: 'flex',
-                                flexDirection: 'row',
+                                flexDirection: responsiveLayout.isMobile.value ? 'column' : 'row',
                                 width: '100%',
                                 'max-height': '100%',
-                                gap: '20px',
+                                gap: responsiveLayout.isMobile.value ? 'var(--po-space-md)' : '20px',
+                                alignItems: 'stretch',
                             }"
                         >
                             <!-- 左侧：优化区域 -->
                             <NFlex
                                 vertical
                                 :style="{
-                                    flex: 1,
-                                    overflow: 'auto',
-                                    height: '100%',
+                                    flex: responsiveLayout.isMobile.value ? 'initial' : 1,
+                                    width: '100%',
+                                    overflow: responsiveLayout.isMobile.value ? 'visible' : 'auto',
+                                    height: responsiveLayout.isMobile.value ? 'auto' : '100%',
+                                    gap: responsiveLayout.isMobile.value ? '12px' : 'var(--po-space-md)',
                                 }"
                             >
                                 <!-- 组件 A: InputPanelUI -->
@@ -475,10 +550,16 @@
                                     :bordered="false"
                                     :style="{
                                         flexShrink: 0,
-                                        minHeight: '200px',
+                                        minHeight: responsiveLayout.isMobile.value ? 'auto' : '200px',
+                                        width: '100%',
                                         borderRadius: 'var(--po-radius-lg)',
                                         boxShadow: 'var(--po-shadow-md)',
                                         transition: 'all var(--po-transition-base)',
+                                    }"
+                                    :content-style="{
+                                        height: responsiveLayout.isMobile.value ? 'auto' : '100%',
+                                        maxHeight: responsiveLayout.isMobile.value ? 'none' : '100%',
+                                        overflow: responsiveLayout.isMobile.value ? 'visible' : 'hidden',
                                     }"
                                 >
                                     <InputPanelUI
@@ -632,14 +713,19 @@
                                 <NCard
                                     :bordered="false"
                                     :style="{
-                                        flex: 1,
-                                        minHeight: '200px',
-                                        overflow: 'hidden',
+                                        flex: responsiveLayout.isMobile.value ? 'initial' : 1,
+                                        minHeight: responsiveLayout.isMobile.value ? 'auto' : '200px',
+                                        overflow: responsiveLayout.isMobile.value ? 'visible' : 'hidden',
+                                        width: '100%',
                                         borderRadius: 'var(--po-radius-lg)',
                                         boxShadow: 'var(--po-shadow-md)',
                                         transition: 'all var(--po-transition-base)',
                                     }"
-                                    content-style="height: 100%; max-height: 100%; overflow: hidden;"
+                                    :content-style="{
+                                        height: responsiveLayout.isMobile.value ? 'auto' : '100%',
+                                        maxHeight: responsiveLayout.isMobile.value ? 'none' : '100%',
+                                        overflow: responsiveLayout.isMobile.value ? 'visible' : 'hidden',
+                                    }"
                                 >
                                     <PromptPanelUI
                                         v-if="
@@ -678,20 +764,124 @@
                                         @open-preview="handleOpenPromptPreview"
                                     />
                                 </NCard>
+
+                                <!-- 组件 C: TestAreaPanel (移动端在这里显示，在优化提示词后面) -->
+                                <template v-if="responsiveLayout.isMobile.value">
+                                    <NCard
+                                        :bordered="false"
+                                        :style="{
+                                            width: '100%',
+                                            borderRadius: 'var(--po-radius-lg)',
+                                            boxShadow: 'var(--po-shadow-md)',
+                                            transition: 'all var(--po-transition-base)',
+                                        }"
+                                        :content-style="{
+                                            height: 'auto',
+                                            overflow: 'visible',
+                                        }"
+                                    >
+                                        <TestAreaPanel
+                                            ref="testPanelRef"
+                                            :optimization-mode="selectedOptimizationMode"
+                                            :context-mode="contextMode"
+                                            :optimized-prompt="optimizer.optimizedPrompt"
+                                            :is-test-running="false"
+                                            :global-variables="variableManager?.customVariables?.value || {}"
+                                            :predefined-variables="predefinedVariables"
+                                            v-model:test-content="testContent"
+                                            v-model:is-compare-mode="isCompareMode"
+                                            :enable-compare-mode="true"
+                                            :enable-fullscreen="true"
+                                            :show-model-override="true"
+                                            :input-mode="responsiveLayout.recommendedInputMode.value"
+                                            :control-bar-layout="responsiveLayout.recommendedControlBarLayout.value"
+                                            :button-size="responsiveLayout.smartButtonSize.value"
+                                            :conversation-max-height="responsiveLayout.responsiveHeights.value.conversationMax"
+                                            :show-original-result="true"
+                                            :result-vertical-layout="true"
+                                            @test="handleTestAreaTest"
+                                            @compare-toggle="handleTestAreaCompareToggle"
+                                            @open-variable-manager="handleOpenVariableManager"
+                                        >
+                                            <template #model-select>
+                                                <SelectWithConfig
+                                                    v-model="modelManager.selectedTestModel"
+                                                    :options="textModelOptions"
+                                                    :getPrimary="OptionAccessors.getPrimary"
+                                                    :getSecondary="OptionAccessors.getSecondary"
+                                                    :getValue="OptionAccessors.getValue"
+                                                    :placeholder="t('model.select.placeholder')"
+                                                    size="medium"
+                                                    filterable
+                                                    :show-config-action="true"
+                                                    :show-empty-config-c-t-a="true"
+                                                    @focus="refreshTextModels"
+                                                    @config="modelManager.showConfig = true"
+                                                />
+                                            </template>
+                                            <template #model-override-select>
+                                                <ModelOverrideSelector
+                                                    v-model="modelOverrideValue"
+                                                    :options="modelOverrideOptions"
+                                                    :loading="isLoadingModelList"
+                                                    :placeholder="t('promptOptimizer.modelOverridePlaceholder')"
+                                                    size="medium"
+                                                    @refresh="handleRefreshModelOverrideList"
+                                                />
+                                            </template>
+                                            <template #original-result>
+                                                <OutputDisplay
+                                                    :content="testResults.originalResult"
+                                                    :reasoning="testResults.originalReasoning"
+                                                    :streaming="testResults.isTestingOriginal"
+                                                    :enableDiff="false"
+                                                    mode="readonly"
+                                                    :style="{ height: '100%', minHeight: '0' }"
+                                                />
+                                            </template>
+                                            <template #optimized-result>
+                                                <OutputDisplay
+                                                    :content="testResults.optimizedResult"
+                                                    :reasoning="testResults.optimizedReasoning"
+                                                    :streaming="testResults.isTestingOptimized"
+                                                    :enableDiff="false"
+                                                    mode="readonly"
+                                                    :style="{ height: '100%', minHeight: '0' }"
+                                                />
+                                            </template>
+                                            <template #single-result>
+                                                <OutputDisplay
+                                                    :content="testResults.optimizedResult"
+                                                    :reasoning="testResults.optimizedReasoning"
+                                                    :streaming="testResults.isTestingOptimized"
+                                                    :enableDiff="false"
+                                                    mode="readonly"
+                                                    :style="{ height: '100%', minHeight: '0' }"
+                                                />
+                                            </template>
+                                        </TestAreaPanel>
+                                    </NCard>
+                                </template>
                             </NFlex>
 
-                            <!-- 右侧：测试区域 -->
+                            <!-- 右侧：测试区域 (仅桌面端显示) -->
                             <NCard
+                                v-if="!responsiveLayout.isMobile.value"
                                 :bordered="false"
                                 :style="{
-                                    flex: 1,
-                                    overflow: 'auto',
-                                    height: '100%',
+                                    flex: responsiveLayout.isMobile.value ? 'initial' : 1,
+                                    width: '100%',
+                                    overflow: responsiveLayout.isMobile.value ? 'visible' : 'auto',
+                                    height: responsiveLayout.isMobile.value ? 'auto' : '100%',
                                     borderRadius: 'var(--po-radius-lg)',
                                     boxShadow: 'var(--po-shadow-md)',
                                     transition: 'all var(--po-transition-base)',
                                 }"
-                                content-style="height: 100%; max-height: 100%; overflow: hidden;"
+                                :content-style="{
+                                    height: responsiveLayout.isMobile.value ? 'auto' : '100%',
+                                    maxHeight: responsiveLayout.isMobile.value ? 'none' : '100%',
+                                    overflow: responsiveLayout.isMobile.value ? 'visible' : 'hidden',
+                                }"
                             >
                                 <!-- 使用新的统一TestAreaPanel组件 -->
                                 <TestAreaPanel
@@ -1005,6 +1195,7 @@ import {
     History as HistoryIcon,
     Star as StarIcon,
     DatabaseExport as DatabaseIcon,
+    Menu2 as MenuIcon,
 } from '@vicons/tabler';
 import {
     NConfigProvider,
@@ -1019,6 +1210,7 @@ import {
     NScrollbar,
     NSpace,
     NIcon,
+    NPopover,
     useMessage,
 } from "naive-ui";
 import hljs from "highlight.js/lib/core";
@@ -1039,7 +1231,6 @@ import {
     OptimizationModeSelectorUI,
     SelectWithConfig,
     TestAreaPanel,
-    UpdaterIcon,
     VariableManagerModal,
     ImageWorkspace,
     ImageModeSelector,
@@ -1147,6 +1338,20 @@ const {
     focusVariableName,
     contextEditorDefaultTab
 } = storeToRefs(uiStore);
+
+// 移动端菜单状态
+const showMobileMenu = ref(false);
+
+// 检查是否在 Electron 环境
+const isElectronEnv = computed(() => {
+    return typeof window !== 'undefined' && (window as any).electronAPI;
+});
+
+// 移动端菜单点击处理
+const handleMobileMenuClick = (action: () => void) => {
+    action();
+    showMobileMenu.value = false;
+};
 
 // 3. 初始化应用 (在组件挂载时)
 onMounted(async () => {
@@ -1274,7 +1479,7 @@ const handleModeSelect = async (mode: "basic" | "pro" | "image") => {
 
 // 测试内容状态 - 新增
 const testContent = ref("");
-const isCompareMode = ref(true);
+const isCompareMode = ref(false);
 
 // 响应式布局和模式配置 - 新增
 const responsiveLayout = useResponsiveTestLayout();
@@ -1507,13 +1712,19 @@ const templateManagerState = useTemplateManager(services as any, {
 
 const currentSelectedTemplate = computed({
     get() {
-        return selectedOptimizationMode.value === "system"
-            ? optimizer.selectedOptimizeTemplate
-            : optimizer.selectedUserOptimizeTemplate;
+        // 基于当前请求的模板类型来决定读取哪个字段
+        const templateType = templateSelectType.value;
+        if (templateType === "optimize" || templateType === "contextSystemOptimize") {
+            return optimizer.selectedOptimizeTemplate;
+        } else {
+            return optimizer.selectedUserOptimizeTemplate;
+        }
     },
     set(newValue) {
         if (!newValue) return;
-        if (selectedOptimizationMode.value === "system") {
+        // 基于当前请求的模板类型来决定写入哪个字段
+        const templateType = templateSelectType.value;
+        if (templateType === "optimize" || templateType === "contextSystemOptimize") {
             optimizer.selectedOptimizeTemplate = newValue;
         } else {
             optimizer.selectedUserOptimizeTemplate = newValue;
@@ -1530,7 +1741,8 @@ const handleOpenOptimizeTemplateManager = () => {
 };
 
 const clearCurrentTemplateSelection = () => {
-    if (selectedOptimizationMode.value === "system") {
+    const templateType = templateSelectType.value;
+    if (templateType === "optimize" || templateType === "contextSystemOptimize") {
         optimizer.selectedOptimizeTemplate = null;
     } else {
         optimizer.selectedUserOptimizeTemplate = null;

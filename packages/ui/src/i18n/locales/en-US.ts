@@ -100,6 +100,9 @@ export default {
     export: "Export",
     next: "Next",
   },
+  button: {
+    stopOptimization: "Stop Generation",
+  },
   actions: {
     copy: "Copy",
     fullscreen: "Fullscreen",
@@ -118,6 +121,8 @@ export default {
     basicMode: "Basic",
     contextMode: "Context",
     imageMode: "Image",
+    theme: "Theme",
+    language: "Language",
   },
   contextMode: {
     user: {

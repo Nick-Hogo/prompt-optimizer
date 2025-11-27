@@ -102,6 +102,9 @@ export default {
     export: "导出",
     next: "下一步",
   },
+  button: {
+    stopOptimization: "停止生成",
+  },
   actions: {
     copy: "复制",
     fullscreen: "全屏",
@@ -120,6 +123,8 @@ export default {
     basicMode: "基础",
     contextMode: "上下文",
     imageMode: "图像",
+    theme: "主题",
+    language: "语言",
   },
   contextMode: {
     user: {
@@ -425,8 +430,8 @@ export default {
 
     // 新增：优化模式相关
     optimizationMode: "优化模式",
-    systemPrompt: "系统提示词优化",
-    userPrompt: "用户提示词优化",
+    systemPrompt: "提示词优化",
+    userPrompt: "问答优化",
     systemPromptInput: "系统提示词",
     userPromptInput: "用户提示词",
     systemPromptPlaceholder: "请输入需要优化的系统提示词...",
@@ -996,7 +1001,7 @@ export default {
       help: "",
     },
     model: "测试模型",
-    startTest: "开始测试",
+    startTest: "开始问答",
     startCompare: "开始对比",
     testing: "测试中...",
     toggleCompare: {
@@ -1008,7 +1013,7 @@ export default {
     testResult: "测试结果",
     userPromptTest: "用户提示词测试",
     advanced: {
-      startTest: "开始测试",
+      startTest: "开始问答",
       result: "测试结果",
       messageCount: "{count} 条消息",
       missingVariables: "缺少 {count} 个变量",

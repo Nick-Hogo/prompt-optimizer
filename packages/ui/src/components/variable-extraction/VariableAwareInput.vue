@@ -829,6 +829,7 @@ defineExpose({
 
 .codemirror-container :deep(.cm-content) {
     min-height: v-bind("editorHeight.min");
+
     /* 🆕 支持文本自动换行 */
     white-space: pre-wrap;
     word-wrap: break-word;
