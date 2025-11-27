@@ -44,8 +44,11 @@
       </InputPanelUI>
 
       <!-- For user prompt optimization, show simplified test controls -->
-      <NCard v-else size="medium" class="mb-0">
-        <div class="flex items-center gap-4">
+      <div v-else>
+        <h3 class="text-lg font-semibold mb-3">
+          {{ t('test.content') }}
+        </h3>
+        <div class="flex items-center gap-4 mb-3">
           <div class="flex-1">
             <div class="block text-sm font-medium mb-2">
               {{ t('test.model') }}
@@ -79,7 +82,7 @@
             </NButton>
           </div>
         </div>
-      </NCard>
+      </div>
     </div>
 
     <!-- Test Results Area -->
@@ -148,7 +151,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 
 import { useI18n } from 'vue-i18n'
-import { NButton, NCard } from 'naive-ui'
+import { NButton } from 'naive-ui'
 import { useToast } from '../composables/ui/useToast'
 import type { AppServices } from '../types/services'
 import InputPanelUI from './InputPanel.vue'

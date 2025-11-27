@@ -50,6 +50,9 @@
                     :predefined-variable-values="predefinedVariableValues"
                     @variable-extracted="handleVariableExtracted"
                     @add-missing-variable="handleAddMissingVariable"
+                    :collapsible="isMobile"
+                    :collapsed="isUserPromptCollapsed"
+                    @toggle-collapse="toggleUserPromptCollapse"
                 >
                     <!-- 模型选择插槽 -->
                     <template #model-select>
@@ -98,6 +101,9 @@
                     :optimization-mode="optimizationMode"
                     :advanced-mode-enabled="true"
                     :show-preview="true"
+                    :collapsible="isMobile"
+                    :collapsed="isOptimizedPanelCollapsed"
+                    @toggle-collapse="toggleOptimizedPanelCollapse"
                     @iterate="emit('iterate', $event)"
                     @openTemplateManager="emit('open-template-manager', $event)"
                     @switchVersion="emit('switch-version', $event)"
@@ -225,6 +231,7 @@
  * - 支持变量系统 (全局变量 + 测试临时变量)
  * - 🆕 支持文本选择并提取为变量 (用户模式独有)
  * - 🆕 使用 composable 管理临时变量，无需 props 传递
+ * - 🆕 支持移动端折叠功能
  * - 支持工具调用配置
  * - 支持响应式布局
  *
@@ -240,7 +247,7 @@
  * />
  * ```
  */
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 import { useI18n } from "vue-i18n";
 import { NCard, NFlex, NButton, NText } from "naive-ui";
@@ -401,6 +408,26 @@ const { t } = useI18n();
 const tempVarsManager = useTemporaryVariables();
 const temporaryVariables = tempVarsManager.temporaryVariables;
 
+/** 🆕 用户提示词卡片折叠状态 (仅移动端有效) */
+const isUserPromptCollapsed = ref(false);
+
+/** 🆕 优化后提示词卡片折叠状态 (仅移动端有效) */
+const isOptimizedPanelCollapsed = ref(false);
+
+/**
+ * 🆕 监听设备类型变化
+ *
+ * 当从移动端切换到桌面端时，自动展开折叠的卡片
+ * 避免在桌面端出现不必要的折叠状态
+ */
+watch(isMobile, (value) => {
+    if (!value) {
+        // 切换到桌面端时，自动展开
+        isUserPromptCollapsed.value = false;
+        isOptimizedPanelCollapsed.value = false;
+    }
+});
+
 // ========================
 // 计算属性
 // ========================
@@ -474,6 +501,24 @@ const handleVariableExtracted = (data: {
 
     // 同时触发变量提取事件,通知父组件
     emit("variable-extracted", data);
+};
+
+/**
+ * 🆕 处理用户提示词卡片折叠切换
+ *
+ * 在移动端点击折叠按钮时触发
+ */
+const toggleUserPromptCollapse = () => {
+    isUserPromptCollapsed.value = !isUserPromptCollapsed.value;
+};
+
+/**
+ * 🆕 处理优化后提示词卡片折叠切换
+ *
+ * 在移动端点击折叠按钮时触发
+ */
+const toggleOptimizedPanelCollapse = () => {
+    isOptimizedPanelCollapsed.value = !isOptimizedPanelCollapsed.value;
 };
 
 /**

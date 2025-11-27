@@ -8,118 +8,135 @@
         }"
     >
         <!-- 标题和按钮区域 -->
-        <NCard
-            size="small"
-            :bordered="false"
-            :segmented="false"
-            class="flex-none"
-            content-style="padding: 0;"
-            :style="{ maxHeight: '120px', overflow: 'visible' }"
-        >
-            <NFlex justify="space-between" align="flex-start" :wrap="false">
-                <!-- 左侧：标题和版本 -->
-                <NSpace vertical :size="8" class="flex-1 min-w-0">
-                    <NSpace align="center" :size="12">
+        <NFlex justify="space-between" align="flex-start" :wrap="false" class="flex-none mb-3">
+            <!-- 左侧：标题和版本 -->
+            <NSpace vertical :size="8" class="flex-1 min-w-0">
+                <NSpace align="center" :size="12">
+                    <!-- 标题容器（包含折叠按钮） -->
+                    <NFlex align="center" :size="8">
                         <NText class="text-lg font-semibold">{{
                             t("prompt.optimized")
                         }}</NText>
-                        <NSpace
-                            v-if="versions && versions.length > 0"
-                            :size="4"
-                            class="version-tags"
+                        <!-- 🆕 折叠按钮（仅移动端且启用折叠时显示） -->
+                        <NButton
+                            v-if="collapsible"
+                            text
+                            size="tiny"
+                            class="collapse-trigger"
+                            :aria-expanded="!isContentCollapsed"
+                            :aria-label="isContentCollapsed ? t('common.expand') : t('common.collapse')"
+                            :title="isContentCollapsed ? t('common.expand') : t('common.collapse')"
+                            @click="handleToggleCollapse"
                         >
-                            <NTag
-                                v-for="version in versions.slice().reverse()"
-                                :key="version.id"
-                                :type="
-                                    currentVersionId === version.id
-                                        ? 'success'
-                                        : 'default'
-                                "
-                                size="small"
-                                @click="switchVersion(version)"
-                                :cursor="'pointer'"
-                                :bordered="currentVersionId !== version.id"
+                            <NIcon
+                                :size="18"
+                                :class="['collapse-trigger-icon', { 'is-collapsed': isContentCollapsed }]"
                             >
-                                V{{ version.version }}
-                            </NTag>
-                        </NSpace>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                                </svg>
+                            </NIcon>
+                        </NButton>
+                    </NFlex>
+                    <NSpace
+                        v-if="versions && versions.length > 0 && !isContentCollapsed"
+                        :size="4"
+                        class="version-tags"
+                    >
+                        <NTag
+                            v-for="version in versions.slice().reverse()"
+                            :key="version.id"
+                            :type="
+                                currentVersionId === version.id
+                                    ? 'success'
+                                    : 'default'
+                            "
+                            size="small"
+                            @click="switchVersion(version)"
+                            :cursor="'pointer'"
+                            :bordered="currentVersionId !== version.id"
+                        >
+                            V{{ version.version }}
+                        </NTag>
                     </NSpace>
                 </NSpace>
+            </NSpace>
 
-                <!-- 右侧：操作按钮 -->
-                <NSpace align="center" :size="8" class="flex-shrink-0">
-                    <!-- 预览按钮 -->
-                    <NButton
-                        v-if="showPreview && optimizedPrompt"
-                        @click="$emit('open-preview')"
-                        type="tertiary"
-                        size="small"
-                        ghost
-                        round
-                        :title="t('common.preview')"
-                    >
-                        <template #icon>
-                            <NIcon>
-                                <svg
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                            </svg>
-                            </NIcon>
-                        </template>
-                    </NButton>
-                    <!-- 继续优化按钮 -->
-                    <NButton
-                        v-if="optimizedPrompt"
-                        @click="handleIterate"
-                        :disabled="isIterating"
-                        :loading="isIterating"
-                        type="primary"
-                        size="small"
-                        class="min-w-[100px]"
-                    >
-                        <template #icon>
+            <!-- 右侧：操作按钮（折叠时隐藏） -->
+            <NSpace v-if="!isContentCollapsed" align="center" :size="8" class="flex-shrink-0">
+                <!-- 预览按钮 -->
+                <NButton
+                    v-if="showPreview && optimizedPrompt"
+                    @click="$emit('open-preview')"
+                    type="tertiary"
+                    size="small"
+                    ghost
+                    round
+                    :title="t('common.preview')"
+                >
+                    <template #icon>
+                        <NIcon>
                             <svg
-                                v-if="!isIterating"
-                                class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                ></path>
-                            </svg>
-                        </template>
-                        {{
-                            isIterating
-                                ? t("prompt.optimizing")
-                                : t("prompt.continueOptimize")
-                        }}
-                    </NButton>
-                </NSpace>
-            </NFlex>
-        </NCard>
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                        </svg>
+                        </NIcon>
+                    </template>
+                </NButton>
+                <!-- 继续优化按钮 -->
+                <NButton
+                    v-if="optimizedPrompt"
+                    @click="handleIterate"
+                    :disabled="isIterating"
+                    :loading="isIterating"
+                    type="primary"
+                    size="small"
+                    class="min-w-[100px]"
+                >
+                    <template #icon>
+                        <svg
+                            v-if="!isIterating"
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            ></path>
+                        </svg>
+                    </template>
+                    {{
+                        isIterating
+                            ? t("prompt.optimizing")
+                            : t("prompt.continueOptimize")
+                    }}
+                </NButton>
+            </NSpace>
+        </NFlex>
 
-        <!-- 内容区域：使用 OutputDisplay 组件 -->
-        <OutputDisplay
+        <!-- 🆕 可折叠内容区域 -->
+        <NCollapseTransition>
+            <div v-show="!isContentCollapsed">
+                <!-- 内容区域：使用 OutputDisplay 组件 -->
+                <OutputDisplay
             ref="outputDisplayRef"
             :content="optimizedPrompt"
             :original-content="previousVersionText"
@@ -141,6 +158,8 @@
             @update:content="$emit('update:optimizedPrompt', $event)"
             @save-favorite="$emit('save-favorite', $event)"
         />
+            </div>
+        </NCollapseTransition>
     </NFlex>
     <!-- 迭代优化弹窗 -->
     <Modal v-model="showIterateInput" @confirm="submitIterate">
@@ -203,7 +222,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { NButton, NText, NInput, NCard, NFlex, NSpace, NTag, NIcon } from "naive-ui";
+import { NButton, NText, NInput, NFlex, NSpace, NTag, NIcon, NCollapseTransition } from "naive-ui";
 import { useToast } from '../composables/ui/useToast';
 import TemplateSelect from "./TemplateSelect.vue";
 import Modal from "./Modal.vue";
@@ -270,6 +289,16 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    // 🆕 是否允许折叠（移动端专用）
+    collapsible: {
+        type: Boolean,
+        default: false,
+    },
+    // 🆕 折叠状态
+    collapsed: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits<{
@@ -288,6 +317,8 @@ const emit = defineEmits<{
     templateSelect: [template: Template];
     "save-favorite": [data: { content: string; originalContent?: string }];
     "open-preview": [];
+    /** 🆕 折叠切换事件 */
+    "toggle-collapse": [];
 }>();
 
 const showIterateInput = ref(false);
@@ -338,6 +369,14 @@ const previousVersionText = computed(() => {
         return props.originalPrompt || "";
     }
 });
+
+// 🆕 计算属性：当前内容是否折叠
+const isContentCollapsed = computed(() => props.collapsible && props.collapsed);
+
+// 🆕 处理折叠切换
+const handleToggleCollapse = () => {
+    emit("toggle-collapse");
+};
 
 // 获取当前版本号（保留用于未来功能）
 // const getCurrentVersionNumber = () => {
@@ -431,6 +470,24 @@ defineExpose({
 </script>
 
 <style scoped>
+/* 🆕 折叠触发按钮 */
+.collapse-trigger {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  color: var(--n-text-color);
+}
+
+/* 🆕 折叠图标动画 */
+.collapse-trigger-icon {
+  transition: transform 0.2s ease;
+}
+
+.collapse-trigger-icon.is-collapsed {
+  transform: rotate(-90deg);
+}
+
 /* 版本容器样式 */
 .version-container {
     display: flex;

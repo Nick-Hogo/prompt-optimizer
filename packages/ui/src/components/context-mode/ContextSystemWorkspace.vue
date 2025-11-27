@@ -19,95 +19,197 @@
             }"
         >
             <!-- 提示词输入面板 -->
-            <NCard
-                :style="{
-                    flexShrink: 0,
-                    minHeight: '200px',
-                }"
-            >
-                <InputPanelUI
-                    :modelValue="prompt"
-                    @update:modelValue="emit('update:prompt', $event)"
-                    :label="t('promptOptimizer.originalPrompt')"
-                    :placeholder="
-                        t('promptOptimizer.originalPromptPlaceholder')
-                    "
-                    :model-label="t('promptOptimizer.optimizeModel')"
-                    :template-label="t('promptOptimizer.templateLabel')"
-                    :button-text="t('promptOptimizer.optimize')"
-                    :loading-text="t('button.stopOptimization')"
-                    :loading="isOptimizing"
-                    :show-preview="true"
-                    @submit="emit('optimize')"
-                    @stop="emit('stop-optimization')"
-                    @configModel="emit('config-model')"
-                    @open-preview="emit('open-input-preview')"
+            <div :style="{ flexShrink: 0, minHeight: '48px', display: 'flex', flexDirection: 'column' }">
+                <!-- 折叠标题栏（仅移动端显示） -->
+                <div class="collapse-header" @click="toggleInputPanel">
+                    <NFlex align="center" :size="8">
+                        <NButton text size="small" class="collapse-toggle">
+                            <template #icon>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    :style="{
+                                        transform: isInputPanelCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s',
+                                        width: '18px',
+                                        height: '18px'
+                                    }"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </template>
+                        </NButton>
+                        <NText strong>{{ t('promptOptimizer.originalPrompt') }}</NText>
+                    </NFlex>
+                </div>
+                
+                <!-- 输入面板卡片 -->
+                <NCard
+                    v-show="!isInputPanelCollapsed"
+                    :style="{
+                        flexShrink: 0,
+                        minHeight: '200px',
+                    }"
                 >
-                    <template #model-select>
-                        <slot name="optimize-model-select"></slot>
-                    </template>
-                    <template #template-select>
-                        <slot name="template-select"></slot>
-                    </template>
-                </InputPanelUI>
-            </NCard>
+                    <InputPanelUI
+                        :modelValue="prompt"
+                        @update:modelValue="emit('update:prompt', $event)"
+                        :label="t('promptOptimizer.originalPrompt')"
+                        :placeholder="
+                            t('promptOptimizer.originalPromptPlaceholder')
+                        "
+                        :model-label="t('promptOptimizer.optimizeModel')"
+                        :template-label="t('promptOptimizer.templateLabel')"
+                        :button-text="t('promptOptimizer.optimize')"
+                        :loading-text="t('button.stopOptimization')"
+                        :loading="isOptimizing"
+                        :show-preview="true"
+                        @submit="emit('optimize')"
+                        @stop="emit('stop-optimization')"
+                        @configModel="emit('config-model')"
+                        @open-preview="emit('open-input-preview')"
+                    >
+                        <template #model-select>
+                            <slot name="optimize-model-select"></slot>
+                        </template>
+                        <template #template-select>
+                            <slot name="template-select"></slot>
+                        </template>
+                    </InputPanelUI>
+                </NCard>
+            </div>
 
             <!-- 会话管理器 (系统模式专属) -->
-            <NCard
-                :style="{ flexShrink: 0, overflow: 'auto' }"
-                content-style="padding: 0;"
-            >
-                <ConversationManager
-                    :messages="optimizationContext"
-                    @update:messages="
-                        emit('update:optimizationContext', $event)
-                    "
-                    :available-variables="availableVariables"
-                    :scan-variables="scanVariables"
-                    :optimization-mode="optimizationMode"
-                    context-mode="system"
-                    :tool-count="toolCount"
-                    @open-variable-manager="emit('open-variable-manager')"
-                    @open-context-editor="emit('open-context-editor')"
-                    :collapsible="true"
-                    :max-height="300"
-                />
-            </NCard>
+            <div :style="{ flexShrink: 0, minHeight: '48px', display: 'flex', flexDirection: 'column' }">
+                <!-- 折叠标题栏（仅移动端显示） -->
+                <div class="collapse-header" @click="toggleConversationPanel">
+                    <NFlex align="center" :size="8">
+                        <NButton text size="small" class="collapse-toggle">
+                            <template #icon>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    :style="{
+                                        transform: isConversationPanelCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s',
+                                        width: '18px',
+                                        height: '18px'
+                                    }"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </template>
+                        </NButton>
+                        <NText strong>{{ t('contextMode.conversationManager') }}</NText>
+                    </NFlex>
+                </div>
+                
+                <!-- 会话管理器卡片 -->
+                <NCard
+                    v-show="!isConversationPanelCollapsed"
+                    :style="{ flexShrink: 0, overflow: 'auto' }"
+                    content-style="padding: 0;"
+                >
+                    <ConversationManager
+                        :messages="optimizationContext"
+                        @update:messages="
+                            emit('update:optimizationContext', $event)
+                        "
+                        :available-variables="availableVariables"
+                        :scan-variables="scanVariables"
+                        :optimization-mode="optimizationMode"
+                        context-mode="system"
+                        :tool-count="toolCount"
+                        @open-variable-manager="emit('open-variable-manager')"
+                        @open-context-editor="emit('open-context-editor')"
+                        :collapsible="true"
+                        :max-height="300"
+                    />
+                </NCard>
+            </div>
 
             <!-- 优化结果面板 -->
-            <NCard
-                :style="{
-                    flex: 1,
-                    minHeight: '200px',
-                    overflow: 'hidden',
-                }"
-                content-style="height: 100%; max-height: 100%; overflow: hidden;"
-            >
-                <PromptPanelUI
-                    :optimized-prompt="optimizedPrompt"
-                    @update:optimizedPrompt="
-                        emit('update:optimizedPrompt', $event)
-                    "
-                    :reasoning="optimizedReasoning"
-                    :original-prompt="prompt"
-                    :is-optimizing="isOptimizing"
-                    :is-iterating="isIterating"
-                    :selectedIterateTemplate="selectedIterateTemplate"
-                    @update:selectedIterateTemplate="
-                        emit('update:selectedIterateTemplate', $event)
-                    "
-                    :versions="versions"
-                    :current-version-id="currentVersionId"
-                    :optimization-mode="optimizationMode"
-                    :advanced-mode-enabled="true"
-                    :show-preview="true"
-                    @iterate="emit('iterate', $event)"
-                    @openTemplateManager="emit('open-template-manager', $event)"
-                    @switchVersion="emit('switch-version', $event)"
-                    @save-favorite="emit('save-favorite', $event)"
-                    @open-preview="emit('open-prompt-preview')"
-                />
-            </NCard>
+            <div :style="{ flex: 1, minHeight: '200px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }">
+                <!-- 折叠标题栏（仅移动端显示） -->
+                <div class="collapse-header" @click="toggleOptimizedPanel">
+                    <NFlex align="center" :size="8">
+                        <NButton text size="small" class="collapse-toggle">
+                            <template #icon>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    :style="{
+                                        transform: isOptimizedPanelCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s',
+                                        width: '18px',
+                                        height: '18px'
+                                    }"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </template>
+                        </NButton>
+                        <NText strong>{{ t('prompt.optimized') }}</NText>
+                    </NFlex>
+                </div>
+                
+                <!-- 优化结果卡片 -->
+                <NCard
+                    v-show="!isOptimizedPanelCollapsed"
+                    :style="{
+                        flex: 1,
+                        minHeight: '200px',
+                        overflow: 'hidden',
+                    }"
+                    content-style="height: 100%; max-height: 100%; overflow: hidden;"
+                >
+                    <PromptPanelUI
+                        :optimized-prompt="optimizedPrompt"
+                        @update:optimizedPrompt="
+                            emit('update:optimizedPrompt', $event)
+                        "
+                        :reasoning="optimizedReasoning"
+                        :original-prompt="prompt"
+                        :is-optimizing="isOptimizing"
+                        :is-iterating="isIterating"
+                        :selectedIterateTemplate="selectedIterateTemplate"
+                        @update:selectedIterateTemplate="
+                            emit('update:selectedIterateTemplate', $event)
+                        "
+                        :versions="versions"
+                        :current-version-id="currentVersionId"
+                        :optimization-mode="optimizationMode"
+                        :advanced-mode-enabled="true"
+                        :show-preview="true"
+                        @iterate="emit('iterate', $event)"
+                        @openTemplateManager="emit('open-template-manager', $event)"
+                        @switchVersion="emit('switch-version', $event)"
+                        @save-favorite="emit('save-favorite', $event)"
+                        @open-preview="emit('open-prompt-preview')"
+                    />
+                </NCard>
+            </div>
         </NFlex>
 
         <!-- 右侧：测试区域 -->
@@ -120,95 +222,135 @@
                 gap: '12px',
             }"
         >
-            <!-- 测试区域操作栏 -->
-            <NCard size="small" :style="{ flexShrink: 0 }">
-                <NFlex justify="space-between" align="center">
-                    <!-- 左侧：区域标识 -->
+            <!-- 测试区域整体包装 -->
+            <div :style="{ flex: 1, minHeight: '48px', display: 'flex', flexDirection: 'column' }">
+                <!-- 折叠标题栏（仅移动端显示） -->
+                <div class="collapse-header" @click="toggleTestPanel">
                     <NFlex align="center" :size="8">
-                        <NText strong>{{ $t("test.areaTitle") }}</NText>
-                        <NTag type="info" size="small">
-                            <template #icon><span>⚙️</span></template>
-                            {{ $t("contextMode.system.label") }}
-                        </NTag>
-                    </NFlex>
-
-                    <!-- 右侧：快捷操作按钮 -->
-                    <NFlex :size="8">
-                        <NButton
-                            size="small"
-                            quaternary
-                            @click="emit('open-global-variables')"
-                            :title="$t('contextMode.actions.globalVariables')"
-                        >
-                            <template #icon><span>📊</span></template>
-                            <span v-if="!isMobile">{{
-                                $t("contextMode.actions.globalVariables")
-                            }}</span>
+                        <NButton text size="small" class="collapse-toggle">
+                            <template #icon>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    :style="{
+                                        transform: isTestPanelCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s',
+                                        width: '18px',
+                                        height: '18px'
+                                    }"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </template>
                         </NButton>
+                        <NText strong>{{ $t("test.areaTitle") }}</NText>
                     </NFlex>
-                </NFlex>
-            </NCard>
-
-            <!-- 测试区域主内容 -->
-            <NCard
-                :style="{ flex: 1, overflow: 'auto' }"
-                content-style="height: 100%; max-height: 100%; overflow: hidden;"
-            >
-                <TestAreaPanel
-                    ref="testAreaPanelRef"
-                    :optimization-mode="optimizationMode"
-                    context-mode="system"
-                    :optimized-prompt="optimizedPrompt"
-                    :is-test-running="isTestRunning"
-                    :global-variables="globalVariables"
-                    :predefined-variables="predefinedVariables"
-                    :testContent="testContent"
-                    @update:testContent="emit('update:testContent', $event)"
-                    :isCompareMode="isCompareMode"
-                    @update:isCompareMode="emit('update:isCompareMode', $event)"
-                    :enable-compare-mode="true"
-                    :enable-fullscreen="true"
-                    :input-mode="inputMode"
-                    :control-bar-layout="controlBarLayout"
-                    :button-size="buttonSize"
-                    :conversation-max-height="conversationMaxHeight"
-                    :show-original-result="true"
-                    :result-vertical-layout="resultVerticalLayout"
-                    @test="handleTestWithVariables"
-                    @compare-toggle="emit('compare-toggle')"
-                    @open-variable-manager="emit('open-variable-manager')"
-                    @variable-change="
-                        (name: string, value: string) => emit('variable-change', name, value)
-                    "
-                    @save-to-global="
-                        (name: string, value: string) => emit('save-to-global', name, value)
-                    "
+                </div>
+                
+                <!-- 测试区域内容 -->
+                <NFlex
+                    v-show="!isTestPanelCollapsed"
+                    vertical
+                    :style="{ flex: 1, gap: '12px' }"
                 >
-                    <!-- 模型选择插槽 -->
-                    <template #model-select>
-                        <slot name="test-model-select"></slot>
-                    </template>
+                    <!-- 测试区域操作栏 -->
+                    <NCard size="small" :style="{ flexShrink: 0 }">
+                        <NFlex justify="space-between" align="center">
+                            <!-- 左侧：区域标识 -->
+                            <NFlex align="center" :size="8">
+                                <NText strong>{{ $t("test.areaTitle") }}</NText>
+                                <NTag type="info" size="small">
+                                    <template #icon><span>⚙️</span></template>
+                                    {{ $t("contextMode.system.label") }}
+                                </NTag>
+                            </NFlex>
 
-                    <!-- 结果显示插槽 -->
-                    <template #original-result>
-                        <slot name="original-result"></slot>
-                    </template>
+                            <!-- 右侧：快捷操作按钮 -->
+                            <NFlex :size="8">
+                                <NButton
+                                    size="small"
+                                    quaternary
+                                    @click="emit('open-global-variables')"
+                                    :title="$t('contextMode.actions.globalVariables')"
+                                >
+                                    <template #icon><span>📊</span></template>
+                                    <span v-if="!isMobile">{{
+                                        $t("contextMode.actions.globalVariables")
+                                    }}</span>
+                                </NButton>
+                            </NFlex>
+                        </NFlex>
+                    </NCard>
 
-                    <template #optimized-result>
-                        <slot name="optimized-result"></slot>
-                    </template>
+                    <!-- 测试区域主内容 -->
+                    <NCard
+                        :style="{ flex: 1, overflow: 'auto' }"
+                        content-style="height: 100%; max-height: 100%; overflow: hidden;"
+                    >
+                        <TestAreaPanel
+                            ref="testAreaPanelRef"
+                            :optimization-mode="optimizationMode"
+                            context-mode="system"
+                            :optimized-prompt="optimizedPrompt"
+                            :is-test-running="isTestRunning"
+                            :global-variables="globalVariables"
+                            :predefined-variables="predefinedVariables"
+                            :testContent="testContent"
+                            @update:testContent="emit('update:testContent', $event)"
+                            :isCompareMode="isCompareMode"
+                            @update:isCompareMode="emit('update:isCompareMode', $event)"
+                            :enable-compare-mode="true"
+                            :enable-fullscreen="true"
+                            :input-mode="inputMode"
+                            :control-bar-layout="controlBarLayout"
+                            :button-size="buttonSize"
+                            :conversation-max-height="conversationMaxHeight"
+                            :show-original-result="true"
+                            :result-vertical-layout="resultVerticalLayout"
+                            @test="handleTestWithVariables"
+                            @compare-toggle="emit('compare-toggle')"
+                            @open-variable-manager="emit('open-variable-manager')"
+                            @variable-change="
+                                (name: string, value: string) => emit('variable-change', name, value)
+                            "
+                            @save-to-global="
+                                (name: string, value: string) => emit('save-to-global', name, value)
+                            "
+                        >
+                            <!-- 模型选择插槽 -->
+                            <template #model-select>
+                                <slot name="test-model-select"></slot>
+                            </template>
 
-                    <template #single-result>
-                        <slot name="single-result"></slot>
-                    </template>
-                </TestAreaPanel>
-            </NCard>
+                            <!-- 结果显示插槽 -->
+                            <template #original-result>
+                                <slot name="original-result"></slot>
+                            </template>
+
+                            <template #optimized-result>
+                                <slot name="optimized-result"></slot>
+                            </template>
+
+                            <template #single-result>
+                                <slot name="single-result"></slot>
+                            </template>
+                        </TestAreaPanel>
+                    </NCard>
+                </NFlex>
+            </div>
         </NFlex>
     </NFlex>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import { useI18n } from "vue-i18n";
 import { NCard, NFlex, NButton, NText, NTag } from "naive-ui";
@@ -231,6 +373,39 @@ const breakpoints = useBreakpoints({
     tablet: 1024,
 });
 const isMobile = breakpoints.smaller("mobile");
+
+// 折叠状态
+const isInputPanelCollapsed = ref(false);
+const isConversationPanelCollapsed = ref(false);
+const isOptimizedPanelCollapsed = ref(false);
+const isTestPanelCollapsed = ref(false);
+
+// 检测移动端并设置初始折叠状态
+onMounted(() => {
+    const isMobileDevice = window.innerWidth < 768;
+    // 移动端默认只展开输入面板，其他都折叠
+    isInputPanelCollapsed.value = false;
+    isConversationPanelCollapsed.value = isMobileDevice;
+    isOptimizedPanelCollapsed.value = isMobileDevice;
+    isTestPanelCollapsed.value = isMobileDevice;
+});
+
+// 切换折叠状态
+const toggleInputPanel = () => {
+    isInputPanelCollapsed.value = !isInputPanelCollapsed.value;
+};
+
+const toggleConversationPanel = () => {
+    isConversationPanelCollapsed.value = !isConversationPanelCollapsed.value;
+};
+
+const toggleOptimizedPanel = () => {
+    isOptimizedPanelCollapsed.value = !isOptimizedPanelCollapsed.value;
+};
+
+const toggleTestPanel = () => {
+    isTestPanelCollapsed.value = !isTestPanelCollapsed.value;
+};
 
 // Props 定义 (移除 contextMode，因为固定为 system)
 interface Props {
@@ -336,3 +511,29 @@ defineExpose({
     testAreaPanelRef
 });
 </script>
+
+<style scoped>
+/* 折叠标题栏默认隐藏，仅在移动端显示 */
+.collapse-header {
+    display: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    background-color: var(--n-color);
+    border-bottom: 1px solid var(--n-border-color);
+    user-select: none;
+}
+
+.collapse-header:hover {
+    background-color: var(--n-color-hover);
+}
+
+.collapse-toggle {
+    display: inline-flex;
+}
+
+@media (max-width: 768px) {
+    .collapse-header {
+        display: block;
+    }
+}
+</style>

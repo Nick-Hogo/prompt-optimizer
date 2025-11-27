@@ -1123,7 +1123,7 @@ export default {
     },
   },
   prompt: {
-    optimized: "优化后的系统提示词",
+    optimized: "优化后提示词",
     optimizing: "优化中...",
     continueOptimize: "继续优化",
     copy: "复制",

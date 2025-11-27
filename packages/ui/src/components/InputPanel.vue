@@ -2,14 +2,37 @@
 <template>
     <NSpace vertical :size="20">
         <!-- 标题区域 -->
-        <NFlex justify="space-between" align="flex-start" :wrap="true">
+        <NFlex justify="space-between" align="flex-start" :wrap="true" class="input-panel__header">
             <NFlex align="center" :size="16" style="min-width: 0; flex: 1 1 auto;">
-                <NText :depth="1" style="font-size: 20px; font-weight: 600; white-space: nowrap; line-height: 1.5;">{{
-                    label
-                }}</NText>
-                <!-- 🆕 帮助提示图标 -->
+                <!-- 标题与折叠按钮容器 -->
+                <div class="input-panel__title">
+                    <NText :depth="1" style="font-size: 20px; font-weight: 600; white-space: nowrap; line-height: 1.5;">{{
+                        label
+                    }}</NText>
+                    <!-- 🆕 折叠按钮（仅移动端且启用折叠时显示） -->
+                    <NButton
+                        v-if="collapsible"
+                        text
+                        size="tiny"
+                        class="collapse-trigger"
+                        :aria-expanded="!isContentCollapsed"
+                        :aria-label="isContentCollapsed ? $t('common.expand') : $t('common.collapse')"
+                        :title="isContentCollapsed ? $t('common.expand') : $t('common.collapse')"
+                        @click="handleToggleCollapse"
+                    >
+                        <NIcon
+                            :size="18"
+                            :class="['collapse-trigger-icon', { 'is-collapsed': isContentCollapsed }]"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                            </svg>
+                        </NIcon>
+                    </NButton>
+                </div>
+                <!-- 🆕 帮助提示图标（折叠时隐藏） -->
                 <NPopover
-                    v-if="helpText"
+                    v-if="helpText && !isContentCollapsed"
                     trigger="hover"
                     placement="right"
                     :show-arrow="true"
@@ -45,8 +68,8 @@
                     </div>
                 </NPopover>
 
-                <!-- 优化模板选择器 (保留在标题右侧) -->
-                <div class="inline-selectors" v-if="templateLabel">
+                <!-- 优化模板选择器（折叠时隐藏） -->
+                <div class="inline-selectors" v-if="templateLabel && !isContentCollapsed">
                     <NSpace :size="8" align="center" :wrap="true">
                         <!-- 提示词模板选择 -->
                         <div v-if="templateLabel" class="inline-select-item">
@@ -61,7 +84,14 @@
                 </div>
             </NFlex>
 
-            <NFlex align="center" :size="8" :wrap="true" style="flex-shrink: 0;">
+            <!-- 右侧按钮区域（折叠时隐藏） -->
+            <NFlex
+                v-if="!isContentCollapsed"
+                align="center"
+                :size="8"
+                :wrap="true"
+                style="flex-shrink: 0;"
+            >
                 <!-- 快速配置按钮 -->
                 <slot name="quick-config-button"></slot>
                 
@@ -128,79 +158,85 @@
             </NFlex>
         </NFlex>
 
-        <!-- 输入框 - 使用变量感知输入框 (支持变量提取) -->
-        <VariableAwareInput
-            v-if="enableVariableExtraction"
-            :model-value="modelValue"
-            @update:model-value="$emit('update:modelValue', $event)"
-            :placeholder="placeholder"
-            :autosize="{ minRows: 4, maxRows: 12 }"
-            :existing-global-variables="existingGlobalVariables"
-            :existing-temporary-variables="existingTemporaryVariables"
-            :predefined-variables="predefinedVariables"
-            :global-variable-values="globalVariableValues"
-            :temporary-variable-values="temporaryVariableValues"
-            :predefined-variable-values="predefinedVariableValues"
-            @variable-extracted="handleVariableExtracted"
-            @add-missing-variable="handleAddMissingVariable"
-        />
+        <!-- 🆕 可折叠内容区域 -->
+        <NCollapseTransition>
+            <div v-show="!isContentCollapsed" class="input-panel__body">
+                <!-- 输入框 - 使用变量感知输入框 (支持变量提取) -->
+                <VariableAwareInput
+                    v-if="enableVariableExtraction"
+                    :model-value="modelValue"
+                    @update:model-value="$emit('update:modelValue', $event)"
+                    :placeholder="placeholder"
+                    :autosize="{ minRows: 4, maxRows: 12 }"
+                    :existing-global-variables="existingGlobalVariables"
+                    :existing-temporary-variables="existingTemporaryVariables"
+                    :predefined-variables="predefinedVariables"
+                    :global-variable-values="globalVariableValues"
+                    :temporary-variable-values="temporaryVariableValues"
+                    :predefined-variable-values="predefinedVariableValues"
+                    @variable-extracted="handleVariableExtracted"
+                    @add-missing-variable="handleAddMissingVariable"
+                />
 
-        <!-- 原生输入框 (不支持变量提取) -->
-        <NInput
-            v-else
-            :value="modelValue"
-            @update:value="$emit('update:modelValue', $event)"
-            type="textarea"
-            :placeholder="placeholder"
-            :rows="4"
-            :autosize="{ minRows: 4, maxRows: 12 }"
-            clearable
-            show-count
-        />
+                <!-- 原生输入框 (不支持变量提取) -->
+                <NInput
+                    v-else
+                    :value="modelValue"
+                    @update:value="$emit('update:modelValue', $event)"
+                    type="textarea"
+                    :placeholder="placeholder"
+                    :rows="4"
+                    :autosize="{ minRows: 4, maxRows: 12 }"
+                    clearable
+                    show-count
+                />
 
-        <!-- 控制面板 - 只保留提交按钮 -->
-        <NFlex justify="end" align="center" :size="12" :wrap="true">
-            <!-- 提供商、模型选择器和提交按钮 -->
-            <NFlex align="center" :size="12" :wrap="true">
-                <!-- 提供商和模型选择器 -->
-                <NSpace :size="12" align="center" v-if="modelLabel || modelOverrideLabel">
-                <!-- 提供商选择 -->
-                <div v-if="modelLabel" class="bottom-select-item">
-                    <NText :depth="3" class="select-label">
-                        {{ modelLabel }}:
-                    </NText>
-                    <div class="select-wrapper">
-                        <slot name="model-select"></slot>
-                    </div>
-                </div>
+                <!-- 控制面板 - 只保留提交按钮 -->
+                <NFlex justify="end" align="center" :size="12" :wrap="true" class="control-panel">
+                    <!-- 提供商、模型选择器和提交按钮 -->
+                    <NFlex align="center" :size="12" :wrap="true" class="control-panel-inner">
+                        <!-- 提供商和模型选择器 -->
+                        <NSpace :size="12" align="center" v-if="modelLabel || modelOverrideLabel">
+                        <!-- 提供商选择 -->
+                        <div v-if="modelLabel" class="bottom-select-item">
+                            <NText :depth="3" class="select-label">
+                                {{ modelLabel }}:
+                            </NText>
+                            <div class="select-wrapper">
+                                <slot name="model-select"></slot>
+                            </div>
+                        </div>
 
-                <!-- 模型选择器 -->
-                <div v-if="modelOverrideLabel" class="bottom-select-item">
-                    <NText :depth="3" class="select-label">
-                        {{ modelOverrideLabel }}:
-                    </NText>
-                    <div class="select-wrapper">
-                        <slot name="model-override-select"></slot>
-                    </div>
-                </div>
-                </NSpace>
+                        <!-- 模型选择器 -->
+                        <div v-if="modelOverrideLabel" class="bottom-select-item">
+                            <NText :depth="3" class="select-label">
+                                {{ modelOverrideLabel }}:
+                            </NText>
+                            <div class="select-wrapper">
+                                <slot name="model-override-select"></slot>
+                            </div>
+                        </div>
+                        </NSpace>
 
-                <!-- 控制按钮组 -->
-                <slot name="control-buttons"></slot>
+                        <!-- 控制按钮组 -->
+                        <slot name="control-buttons"></slot>
 
-                <!-- 提交按钮 -->
-                <NButton
-                    type="primary"
-                    size="medium"
-                    @click="$emit('submit')"
-                    :loading="loading"
-                    :disabled="loading || disabled || !modelValue.trim()"
-                    style="min-width: 120px;"
-                >
-                    {{ loading ? loadingText : buttonText }}
-                </NButton>
-            </NFlex>
-        </NFlex>
+                        <!-- 提交按钮 -->
+                        <NButton
+                            type="primary"
+                            size="medium"
+                            @click="$emit('submit')"
+                            :loading="loading"
+                            :disabled="loading || disabled || !modelValue.trim()"
+                            style="min-width: 120px;"
+                            class="submit-button"
+                        >
+                            {{ loading ? loadingText : buttonText }}
+                        </NButton>
+                    </NFlex>
+                </NFlex>
+            </div>
+        </NCollapseTransition>
     </NSpace>
 
     <!-- 全屏弹窗 -->
@@ -229,6 +265,7 @@ import {
     NGridItem,
     NIcon,
     NPopover,
+    NCollapseTransition,
 } from "naive-ui";
 import { useFullscreen } from '../composables/ui/useFullscreen';
 import FullscreenDialog from "./FullscreenDialog.vue";
@@ -286,6 +323,11 @@ interface Props {
     temporaryVariableValues?: Record<string, string>;
     /** 🆕 预定义变量名到变量值的映射 */
     predefinedVariableValues?: Record<string, string>;
+
+    /** 🆕 是否允许折叠（移动端专用） */
+    collapsible?: boolean;
+    /** 🆕 折叠状态 */
+    collapsed?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -302,6 +344,8 @@ const props = withDefaults(defineProps<Props>(), {
     globalVariableValues: () => ({}),
     temporaryVariableValues: () => ({}),
     predefinedVariableValues: () => ({}),
+    collapsible: false,
+    collapsed: false,
 });
 
 const emit = defineEmits<{
@@ -320,6 +364,8 @@ const emit = defineEmits<{
     ];
     /** 🆕 添加缺失变量事件 */
     "add-missing-variable": [varName: string];
+    /** 🆕 折叠切换事件 */
+    "toggle-collapse": [];
 }>();
 
 // 使用全屏组合函数
@@ -327,6 +373,14 @@ const { isFullscreen, fullscreenValue, openFullscreen } = useFullscreen(
     computed(() => props.modelValue),
     (value) => emit("update:modelValue", value),
 );
+
+// 🆕 计算属性：当前内容是否折叠
+const isContentCollapsed = computed(() => props.collapsible && props.collapsed);
+
+// 🆕 处理折叠切换
+const handleToggleCollapse = () => {
+    emit("toggle-collapse");
+};
 
 // 处理变量提取事件
 const handleVariableExtracted = (data: {
@@ -344,6 +398,38 @@ const handleAddMissingVariable = (varName: string) => {
 </script>
 
 <style scoped>
+/* 🆕 标题与折叠按钮容器 */
+.input-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 🆕 折叠触发按钮 */
+.collapse-trigger {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  color: var(--n-text-color);
+}
+
+/* 🆕 折叠图标动画 */
+.collapse-trigger-icon {
+  transition: transform 0.2s ease;
+}
+
+.collapse-trigger-icon.is-collapsed {
+  transform: rotate(-90deg);
+}
+
+/* 🆕 可折叠内容区域 */
+.input-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .inline-selectors {
   display: flex;
   align-items: center;
@@ -386,13 +472,29 @@ const handleAddMissingVariable = (varName: string) => {
 }
 
 .bottom-select-item .select-wrapper {
-  min-width: 180px;
+  min-width: 160px;
   max-width: 250px;
 }
 
 @media (max-width: 1400px) {
   .inline-selectors {
     display: none;
+  }
+}
+
+/* 移动端控制面板样式 */
+@media (max-width: 639px) {
+  .control-panel {
+    justify-content: flex-end !important;
+  }
+  
+  .control-panel-inner {
+    width: 100%;
+    justify-content: flex-end !important;
+  }
+  
+  .submit-button {
+    margin-left: auto;
   }
 }
 </style>
