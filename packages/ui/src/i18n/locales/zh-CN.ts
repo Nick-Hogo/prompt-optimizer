@@ -92,7 +92,7 @@ export default {
     switchToMarkdownView: "切换到Markdown渲染视图",
     copied: "已复制",
     render: "渲染",
-    source: "原文",
+    source: "编辑",
     reasoning: "思考过程",
     compare: "对比",
     moveUp: "上移",

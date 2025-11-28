@@ -161,7 +161,7 @@
             :streaming="streaming"
             style="flex: 1; min-height: 0; overflow: auto;"
           />
-          <div v-else-if="!loading && !streaming" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+          <div v-else-if="!loading && !streaming" style="flex: 1; min-height: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
             <img :src="waitingIcon" alt="waiting" style="width: auto; height: 120px; max-width: 200px; opacity: 0.85; object-fit: contain;" />
             <NText style="font-size: 14px; color: var(--n-text-color-3, #999);">
               {{ placeholder || t('common.noContent') }}
@@ -514,9 +514,7 @@ const updateCompareResult = async () => {
   }
 }
 
-// 智能自动切换逻辑
-const previousViewMode = ref<'render' | 'source' | 'diff' | null>(null)
-
+// 流式生成时的智能推理折叠逻辑
 watch(() => props.streaming, (isStreaming, wasStreaming) => {
   if (isStreaming && !wasStreaming) {
     // 新任务开始，重置用户记忆
@@ -525,20 +523,6 @@ watch(() => props.streaming, (isStreaming, wasStreaming) => {
     // 任务结束，如果用户未干预且思考区域仍然展开，自动折叠
     if (!userHasManuallyToggledReasoning.value && isReasoningExpanded.value) {
       isReasoningExpanded.value = false
-    }
-  }
-
-  if (isStreaming) {
-    // 记住当前模式，并强制切换到原文模式
-    if (internalViewMode.value !== 'source') {
-      previousViewMode.value = internalViewMode.value
-      internalViewMode.value = 'source'
-    }
-  } else {
-    // 流式结束后，恢复之前的模式
-    if (previousViewMode.value) {
-      internalViewMode.value = previousViewMode.value
-      previousViewMode.value = null
     }
   }
 })

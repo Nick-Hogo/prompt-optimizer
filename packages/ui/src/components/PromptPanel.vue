@@ -17,9 +17,8 @@
                         <NText class="text-lg font-semibold">{{
                             t("prompt.optimized")
                         }}</NText>
-                        <!-- 🆕 折叠按钮（仅移动端且启用折叠时显示） -->
+                        <!-- 🆕 折叠按钮（所有端都显示） -->
                         <NButton
-                            v-if="collapsible"
                             text
                             size="tiny"
                             class="collapse-trigger"
@@ -133,8 +132,8 @@
         </NFlex>
 
         <!-- 🆕 可折叠内容区域 -->
-        <NCollapseTransition>
-            <div v-show="!isContentCollapsed">
+        <NCollapseTransition :style="{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex' }">
+            <div v-show="!isContentCollapsed" :style="{ flex: 1, minHeight: 0, height: '100%', display: 'flex', flexDirection: 'column' }">
                 <!-- 内容区域：使用 OutputDisplay 组件 -->
                 <OutputDisplay
             ref="outputDisplayRef"
@@ -370,8 +369,8 @@ const previousVersionText = computed(() => {
     }
 });
 
-// 🆕 计算属性：当前内容是否折叠
-const isContentCollapsed = computed(() => props.collapsible && props.collapsed);
+// 🆕 计算属性：当前内容是否折叠（所有端都支持折叠）
+const isContentCollapsed = computed(() => props.collapsed);
 
 // 🆕 处理折叠切换
 const handleToggleCollapse = () => {

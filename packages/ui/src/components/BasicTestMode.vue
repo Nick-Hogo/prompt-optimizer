@@ -48,8 +48,8 @@
         <h3 class="text-lg font-semibold mb-3">
           {{ t('test.content') }}
         </h3>
-        <div class="flex items-center gap-4 mb-3">
-          <div class="flex-1">
+        <div class="flex items-end gap-4 mb-3">
+          <div class="flex-1 relative z-10">
             <div class="block text-sm font-medium mb-2">
               {{ t('test.model') }}
             </div>
@@ -61,12 +61,12 @@
               @config="$emit('showConfig')"
             />
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-shrink-0 relative z-0 bg-transparent" style="background-color: transparent;">
             <NButton
               @click="toggleCompareMode"
-              :type="isCompareMode ? 'primary' : 'default'"
               size="medium"
               class="h-10 text-sm whitespace-nowrap"
+              quaternary
             >
               {{ isCompareMode ? t('test.toggleCompare.disable') : t('test.toggleCompare.enable') }}
             </NButton>
@@ -74,9 +74,9 @@
               @click="handleTest"
               :disabled="isTesting || !internalSelectedModel"
               :loading="isTesting"
-              type="primary"
               size="medium"
               class="h-10 px-4 text-sm font-medium"
+              quaternary
             >
               {{ isTesting ? t('test.testing') : (isCompareMode ? t('test.startCompare') : t('test.startTest')) }}
             </NButton>
@@ -106,9 +106,6 @@
             'hidden': !isCompareMode
           }"
         >
-          <h3 class="text-lg font-semibold truncate mb-3 flex-none">
-            {{ t('test.originalResult') }}
-          </h3>
           <OutputDisplay
             :content="originalTestResult"
             :reasoning="originalTestReasoning"
@@ -130,9 +127,6 @@
             'md:absolute md:inset-0 md:h-full md:w-full md:left-0': !isCompareMode
           }"
         >
-          <h3 class="text-lg font-semibold truncate mb-3 flex-none">
-            {{ isCompareMode ? t('test.optimizedResult') : t('test.testResult') }}
-          </h3>
           <OutputDisplay
             :content="optimizedTestResult"
             :reasoning="optimizedTestReasoning"
